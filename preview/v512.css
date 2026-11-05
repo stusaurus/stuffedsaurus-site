@@ -1,0 +1,24 @@
+/* V5.12 — approved hand-painted header as one illustration. */
+@media(max-width:769px){
+.masthead{background:#fff5e5;padding:0;border-bottom:0;isolation:isolate}
+.masthead::before{display:none}
+.brandbar{display:block;height:clamp(80px,24.6vw,114px);min-height:0;width:100%;padding:0;margin:0 auto;position:relative;background-color:#faf1df;background-image:url('assets/header-scene.webp');background-size:auto 100%;background-position:50% 50%;background-repeat:no-repeat}
+.brandbar::before,.brandbar::after{display:none!important}
+.brand{display:block;position:absolute;inset:0;width:100%;max-width:none;height:100%;z-index:1}
+.brand picture{display:block;height:100%}
+.brand img{width:100%;height:100%;object-fit:contain;opacity:0}
+.mobile-nav-row{display:flex;align-items:center;justify-content:stretch;width:calc(100% - 22px);max-width:620px;height:46px;margin:-2px auto 5px;position:relative;z-index:6;border:1.5px solid #d4b480;border-radius:14px;box-shadow:0 3px 0 rgba(129,92,51,.10);background:linear-gradient(165deg,#fffdf4,#fff0d4);overflow:visible}
+.mobile-nav-row>a{min-width:0;flex:1;display:flex;align-items:center;justify-content:center;gap:5px;padding:9px 4px;min-height:44px;font-size:12px;font-weight:750;color:#5a3a28;text-decoration:none;white-space:nowrap}
+.mobile-nav-row>a:first-child{border-radius:12px 0 0 12px}
+.mobile-nav-row>a:nth-child(2){border-left:1px dashed #ddc5a1;border-right:1px dashed #ddc5a1}
+.mobile-nav-row .menu-button{position:relative;top:auto;right:auto;bottom:auto;width:auto;height:43px;min-width:0;flex:1;border:0;border-radius:0 12px 12px 0;box-shadow:none;padding:0 4px;margin:0;background:transparent;display:inline-flex;align-items:center;justify-content:center;gap:5px;font-size:17px;color:#5a3a28;line-height:1}
+.mobile-nav-row .menu-button::after{content:'メニュー';font-size:12px;font-weight:750}
+.mobile-nav-row>a:hover,.mobile-nav-row>a:focus-visible,.menu-button:hover{background:#f7e6c5}
+.site-nav{right:11px;top:calc(clamp(80px,24.6vw,114px) + 45px);margin:0;max-height:calc(100dvh - 155px);overflow:auto;z-index:9;background:#fff8ea;border:1.5px solid #d4b480}
+.hero-shell{margin-top:0;background:#f0eddd}
+.hero-foot{height:14px;background:linear-gradient(180deg,#d7dfae 0%,#fff9ee 100%)}
+.home-sections{padding-top:24px;gap:29px}
+.site-footer{background:#e8edde}
+}
+@media(max-width:360px){.mobile-nav-row>a{font-size:11px}.mobile-nav-row .menu-button::after{font-size:11px}}
+@media(min-width:770px){.mobile-nav-row{display:none}}
