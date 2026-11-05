@@ -6,7 +6,7 @@
     manga:   {label:'4コマのへや',     hint:'ちいさなおはなし',     glyph:'▤',  description:'4コマまんが'},
     friends: {label:'なかまの広場',    hint:'ともだちに会おう',     glyph:'✿',  description:'キャラクター紹介'},
     catalog: {label:'ずかん',         hint:'みんなをもっと知ろう', glyph:'▣',  description:'キャラクター図鑑'},
-    sns:     {label:'みんなの広場',    hint:'まちのそとのおはなし', glyph:'◎',  description:'SNS・最新の投稿'},
+    sns:     {label:'まちのアルバム',  hint:'イラストを見にいこう', glyph:'◎',  description:'SNS・最新の投稿'},
     games:   {label:'あそびば',       hint:'ゲームであそぼう',     glyph:'✧',  description:'ゲーム'},
     books:   {label:'えほんの森',     hint:'ページをめくろう',     glyph:'▥',  description:'絵本'},
     goods:   {label:'たからばこ',     hint:'グッズをのぞこう',     glyph:'❀',  description:'グッズ紹介'},
@@ -54,6 +54,24 @@
       else a.removeAttribute('aria-current');
     });
   };
+  if(toggle){
+    const closeMenu=()=>{
+      if(!nav.classList.contains('open')) return;
+      nav.classList.remove('open');
+      toggle.setAttribute('aria-expanded','false');
+    };
+    document.addEventListener('keydown',event=>{
+      if(event.key==='Escape' && nav.classList.contains('open')){
+        closeMenu();
+        toggle.focus();
+      }
+    });
+    document.addEventListener('pointerdown',event=>{
+      if(nav.classList.contains('open') && !nav.contains(event.target) && !toggle.contains(event.target)){
+        closeMenu();
+      }
+    });
+  }
   window.addEventListener('hashchange',highlight);
   highlight();
 })();
