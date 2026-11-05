@@ -51,7 +51,7 @@
     min-height:56px;padding:9px 12px;
     border-radius:12px;
   }
-  .site-nav a[data-world-nav="v516"]+.site-nav a[data-world-nav="v516"]{
+  .site-nav a[data-world-nav="v516"] + a[data-world-nav="v516"]{
     border-top:1px dashed rgba(185,147,101,.22);
   }
   .site-nav .world-nav-glyph {
@@ -75,4 +75,9 @@
 }
 @media(prefers-reduced-motion:reduce){
   .site-nav a[data-world-nav="v516"]{transition:none}
+}
+@media(min-width:770px) and (max-width:1059px){
+  .site-nav a[data-world-nav="v516"]{gap:2px;padding-inline:5px}
+  .site-nav .world-nav-glyph{display:none}
+  .site-nav .world-nav-text{font-size:11px}
 }
