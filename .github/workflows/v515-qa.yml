@@ -44,14 +44,11 @@ jobs:
               for layer in (('512','513') if version=='513' else ('512','513','514') if version=='514' else ('512','513','514')):
                   for ext in ('css','js'):
                       shutil.copy2(Path('preview')/f'v{layer}.{ext}',target/f'v{layer}.{ext}')
-                  html=html.replace('</head>',f'<link rel="stylesheet" href="v{layer}.css"/>
-</head>',1)
-                  html=html.replace('</body>',f'<script src="v{layer}.js"></script>
-</body>',1)
+                  html=html.replace('</head>',f'<link rel="stylesheet" href="v{layer}.css"/>\n</head>',1)
+                  html=html.replace('</body>',f'<script src="v{layer}.js"></script>\n</body>',1)
               if version=='515':
                   shutil.copy2(Path('preview/v515.css'),target/'v515.css')
-                  html=html.replace('</head>','<link rel="stylesheet" href="v515.css"/>\
-</head>',1)
+                  html=html.replace('</head>','<link rel="stylesheet" href="v515.css"/>\n</head>',1)
               (target/'index.html').write_text(html,encoding='utf-8')
           PY
       - name: Run responsive browser QA
