@@ -1,0 +1,64 @@
+name: V5.15 editorial preview browser QA
+on:
+  pull_request:
+    paths:
+      - 'preview/**'
+      - 'qa/**'
+      - 'site.zip'
+      - '.github/workflows/pages.yml'
+      - '.github/workflows/v515-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright test runner
+        run: npm install --no-save @playwright/test@1.58.2
+      - name: Install browser
+        run: npx playwright install --with-deps chromium
+      - name: Assemble review pages
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          import shutil
+          base=Path('public')
+          base.mkdir(exist_ok=True)
+          with ZipFile('site.zip') as z:
+              z.extractall(base)
+          assert (base/'index.html').exists()
+          for version in ('513','514','515'):
+              target=base/f'preview-v{version}'
+              target.mkdir()
+              shutil.copytree(base/'assets',target/'assets')
+              html=(base/'index.html').read_text(encoding='utf-8')
+              for layer in (('512','513') if version=='513' else ('512','513','514') if version=='514' else ('512','513','514')):
+                  for ext in ('css','js'):
+                      shutil.copy2(Path('preview')/f'v{layer}.{ext}',target/f'v{layer}.{ext}')
+                  html=html.replace('</head>',f'<link rel="stylesheet" href="v{layer}.css"/>\n</head>',1)
+                  html=html.replace('</body>',f'<script src="v{layer}.js"></script>\n</body>',1)
+              if version=='515':
+                  shutil.copy2(Path('preview/v515.css'),target/'v515.css')
+                  html=html.replace('</head>','<link rel="stylesheet" href="v515.css"/>\n</head>',1)
+              (target/'index.html').write_text(html,encoding='utf-8')
+          PY
+      - name: Run responsive browser QA
+        run: |
+          python3 -m http.server 8765 -d public >/tmp/stuffedsaurus-http.log 2>&1 &
+          npx playwright test qa/v515.spec.cjs --reporter=line
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v515-browser-results
+          path: |
+            test-results/
+          if-no-files-found: ignore
