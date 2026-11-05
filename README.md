@@ -4,11 +4,11 @@
 
 ## V5.10のアップロード（iPhoneからでも可能）
 
-1. [リポジトリのトップ](https://github.com/stusaurus/stuffedsaurus-site)を開く。
-2. **Add file → Upload files** を選択する。
-3. ChatGPTから受け取った **site.zip** を、**展開せずにそのまま1個だけ**選ぶ。
-4. ページ下部の **Commit changes** を押す。
-5. [Settings → Pages](https://github.com/stusaurus/stuffedsaurus-site/settings/pages) で、**Build and deployment → Source → GitHub Actions** にする。
+1. [Settings → Pages](https://github.com/stusaurus/stuffedsaurus-site/settings/pages) で、**Build and deployment → Source → GitHub Actions** にする。
+2. [リポジトリのトップ](https://github.com/stusaurus/stuffedsaurus-site)を開く。
+3. **Add file → Upload files** を選択する。
+4. ChatGPTから受け取った **site.zip** を、**展開せずにそのまま1個だけ**選ぶ。
+5. ページ下部の **Commit changes** を押す。
 6. [Actions](https://github.com/stusaurus/stuffedsaurus-site/actions) で **Publish StuffedSaurus preview** が成功したことを確認する。
 7. 公開URL: https://stusaurus.github.io/stuffedsaurus-site/
 
