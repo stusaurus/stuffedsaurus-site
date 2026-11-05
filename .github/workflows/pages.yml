@@ -202,6 +202,23 @@ jobs:
           grep -q 'v516.js' public/preview-v516/index.html
           ! grep -q 'v516.js' public/index.html
 
+      - name: Promote approved V5.16 town navigation to homepage
+        if: steps.bundle.outputs.present == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f public/preview-v516/index.html
+          cp public/preview-v516/index.html public/index.html
+          cp public/preview-v516/v516.css public/v516.css
+          cp public/preview-v516/v516.js public/v516.js
+          test -f public/preview-v515/index.html
+          test -f public/preview-v514/index.html
+          test -f public/assets/hero-wide.webp
+          grep -q 'v515.css' public/index.html
+          grep -q 'v516.css' public/index.html
+          grep -q 'v516.js' public/index.html
+          echo 'V5.16 homepage assembled; older releases preserved for rollback.'
+
       - name: Configure GitHub Pages
         if: steps.bundle.outputs.present == 'true'
         uses: actions/configure-pages@v5

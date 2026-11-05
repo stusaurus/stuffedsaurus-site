@@ -83,3 +83,32 @@ test('V5.16 Escape closes menu and returns focus to the toggle',async({browser})
  await expect(toggle).toBeFocused();
  await page.close();
 });
+
+test('V5.16 release homepage has town navigation on mobile and desktop',async({browser})=>{
+ for(const width of [390,1440]){
+  const page=await browser.newPage({viewport:{width,height:850}});
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.goto('http://127.0.0.1:8765/',{waitUntil:'networkidle'});
+  await expect(page.locator('link[href="v516.css"]')).toHaveCount(1);
+  await expect(page.locator('script[src="v516.js"]')).toHaveCount(1);
+  await expect(page.locator('.site-nav a[data-world-nav="v516"]')).toHaveCount(9);
+  await expect(page.locator('.site-nav a[href="#/sns"] .world-nav-text')).toHaveText('まちのアルバム');
+  if(width===390){
+   const toggle=page.locator('#menu-toggle');
+   await toggle.click();
+   await expect(page.locator('.site-nav a[href="#/news"]')).toBeVisible();
+   await page.screenshot({path:'test-results/v516-release-mobile.png',fullPage:true});
+   await toggle.click();
+  } else {
+   await page.screenshot({path:'test-results/v516-release-desktop.png',fullPage:true});
+  }
+  const state=await page.evaluate(()=>({
+   overflow:document.documentElement.scrollWidth-innerWidth,
+   broken:[...document.images].filter(i=>i.getClientRects().length&&i.complete&&!i.naturalWidth).map(i=>i.src)
+  }));
+  expect(state.overflow).toBeLessThanOrEqual(2);
+  expect(state.broken).toEqual([]);
+  expect(errors).toEqual([]);
+  await page.close();
+ }
+});
