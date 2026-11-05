@@ -1,0 +1,33 @@
+/* V5.15 — a more intentional storybook home; approved character art is untouched. */
+@media(min-width:770px){
+  .home-sections{
+    display:grid;
+    grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);
+    align-items:stretch;
+    gap:24px;
+  }
+  #home-manga{grid-column:1;grid-row:1 / span 2;margin:0}
+  #home-friends{grid-column:2;grid-row:1;margin:0}
+  #home-updates{grid-column:2;grid-row:2;margin:0}
+  #home-manga .feature-preview img{width:100%;height:auto;object-fit:contain}
+}
+@media(max-width:769px){
+  .home-sections{display:flex;flex-direction:column;gap:25px}
+  #home-manga{order:0}
+  #home-friends{order:1}
+  #home-updates{order:2}
+}
+#home-manga,#home-friends,#home-updates{
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+#home-manga .section-heading{background:#f9edcf;border-color:#ddc393}
+#home-manga .feature-preview{max-width:100%}
+#home-manga .text-action,#home-friends .text-action{
+  font-weight:750;
+  text-decoration-thickness:2px;
+  text-underline-offset:.25em;
+}
+@media(prefers-reduced-motion:reduce){
+  #home-manga *,#home-friends *{scroll-behavior:auto}
+}
