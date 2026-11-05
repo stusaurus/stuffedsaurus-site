@@ -7,6 +7,10 @@ on:
       - 'preview/v511.css'
       - 'preview/v512.css'
       - 'preview/v512.js'
+      - 'preview/v513.css'
+      - 'preview/v513.js'
+      - 'preview/v514.css'
+      - 'preview/v514.js'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -94,6 +98,28 @@ jobs:
           mv /tmp/stuffedsaurus-v512 public/preview-v512
           test -f public/index.html
           test -f public/preview-v512/index.html
+
+      - name: Build isolated V5.13 and V5.14 review pages
+        if: steps.bundle.outputs.present == 'true'
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import shutil
+          base = Path('public')
+          for version in ('513', '514'):
+              target = base / f'preview-v{version}'
+              target.mkdir(parents=True, exist_ok=True)
+              shutil.copytree(base / 'assets', target / 'assets')
+              html = (base / 'index.html').read_text(encoding='utf-8')
+              for layer in (('512', '513') if version == '513' else ('512', '513', '514')):
+                  for ext in ('css', 'js'):
+                      shutil.copy2(Path('preview') / f'v{layer}.{ext}', target / f'v{layer}.{ext}')
+                  html = html.replace('</head>', f'<link rel="stylesheet" href="v{layer}.css"/>\\n</head>', 1)
+                  html = html.replace('</body>', f'<script src="v{layer}.js"></script>\\n</body>', 1)
+              (target / 'index.html').write_text(html, encoding='utf-8')
+              assert (target / 'index.html').exists()
+          PY
 
       - name: Configure GitHub Pages
         if: steps.bundle.outputs.present == 'true'
