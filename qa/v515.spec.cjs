@@ -49,3 +49,23 @@ test('V5.15 mobile story navigation and menu',async({browser})=>{
  expect(errors).toEqual([]);
  await page.close();
 });
+
+test('V5.15 promoted homepage loads same storybook design',async({browser})=>{
+ for(const width of [390,1440]){
+  const page=await browser.newPage({viewport:{width,height:850}});
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.goto('http://127.0.0.1:8765/',{waitUntil:'networkidle'});
+  await expect(page.locator('link[href="v515.css"]')).toHaveCount(1);
+  await expect(page.locator('#home-manga')).toBeVisible();
+  await expect(page.locator('#home-friends')).toBeVisible();
+  const data=await page.evaluate(()=>({
+   overflow:document.documentElement.scrollWidth-innerWidth,
+   broken:[...document.images].filter(i=>i.getClientRects().length&&i.complete&&!i.naturalWidth).map(i=>i.src)
+  }));
+  expect(data.overflow).toBeLessThanOrEqual(2);
+  expect(data.broken).toEqual([]);
+  expect(errors).toEqual([]);
+  await page.screenshot({path:'test-results/v515-promoted-'+width+'.png',fullPage:true});
+  await page.close();
+ }
+});
