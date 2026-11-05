@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'preview/**'
+      - 'qa/**'
       - 'site.zip'
       - '.github/workflows/pages.yml'
       - '.github/workflows/v514-qa.yml'
