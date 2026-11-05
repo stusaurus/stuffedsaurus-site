@@ -13,15 +13,17 @@ permissions:
 
 jobs:
   browser-qa:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Install Playwright test runner
+        run: npm install --no-save @playwright/test@1.58.2
       - name: Install browser
-        run: npx --yes playwright@1.58.2 install --with-deps chromium
+        run: npx playwright install --with-deps chromium
       - name: Assemble review pages
         run: |
           python3 - <<'PY'
@@ -45,8 +47,6 @@ jobs:
                   html=html.replace('</body>',f'<script src="v{layer}.js"></script>\n</body>',1)
               (target/'index.html').write_text(html,encoding='utf-8')
           PY
-      - name: Install Playwright test runner
-        run: npm install --no-save @playwright/test@1.58.2
       - name: Run responsive browser QA
         run: |
           python3 -m http.server 8765 -d public >/tmp/stuffedsaurus-http.log 2>&1 &
