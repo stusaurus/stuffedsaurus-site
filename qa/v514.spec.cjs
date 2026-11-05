@@ -49,7 +49,7 @@ test('V5.14 home links reach storybook sections',async({browser})=>{
    const links=page.locator('a[href="#/'+route+'"],a[href^="#/'+route+'/"]');
    const count=await links.count();
    expect(count,'missing navigation link for '+route).toBeGreaterThan(0);
-   const link=links.first();
+   const link=links.filter({visible:true}).first();
    await expect(link).toBeVisible();
    await link.click();
    await expect.poll(()=>new URL(page.url()).hash).toMatch(new RegExp('^#/'+route+'(?:/|$)'));
