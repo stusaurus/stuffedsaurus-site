@@ -31,3 +31,43 @@
 @media(prefers-reduced-motion:reduce){
   #home-manga *,#home-friends *{scroll-behavior:auto}
 }
+
+/* Make the story entrance feel like the opening spread of a picture book. */
+#home-manga{
+  position:relative;
+  border-width:2px;
+  box-shadow:0 12px 26px rgba(89,66,38,.09);
+}
+#home-manga .section-heading{
+  letter-spacing:.045em;
+  text-wrap:balance;
+}
+#home-manga .feature-preview{
+  border-radius:16px;
+  isolation:isolate;
+}
+#home-manga .feature-preview a{
+  display:block;
+  border-radius:16px;
+}
+#home-manga .feature-preview a:focus-visible{
+  outline:3px solid #668a5b;
+  outline-offset:4px;
+}
+#home-friends{
+  box-shadow:0 7px 19px rgba(70,89,54,.07);
+}
+#home-updates .news-list{
+  line-height:1.65;
+}
+@media(min-width:770px){
+  #home-manga{align-self:stretch}
+  #home-manga .feature-preview{margin-inline:auto}
+}
+@media(max-width:769px){
+  #home-manga{box-shadow:0 8px 18px rgba(89,66,38,.08)}
+  #home-manga .section-heading{line-height:1.4}
+}
+@media(prefers-reduced-motion:reduce){
+  #home-manga .feature-preview a{transition:none}
+}
