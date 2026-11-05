@@ -121,6 +121,20 @@ jobs:
               assert (target / 'index.html').exists()
           PY
 
+      - name: Promote approved V5.14 to homepage (retain original archive)
+        if: steps.bundle.outputs.present == 'true'
+        shell: bash
+        run: |
+          test -f public/preview-v514/index.html
+          cp public/preview-v514/index.html public/index.html
+          for layer in 512 513 514; do
+            cp "public/preview-v514/v${layer}.css" "public/v${layer}.css"
+            cp "public/preview-v514/v${layer}.js" "public/v${layer}.js"
+          done
+          test -f public/assets/hero-wide.webp
+          test -f public/v514.css
+          grep -q 'v514.css' public/index.html
+
       - name: Configure GitHub Pages
         if: steps.bundle.outputs.present == 'true'
         uses: actions/configure-pages@v5
