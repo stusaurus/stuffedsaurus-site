@@ -1,0 +1,34 @@
+name: Verify published StuffedSaurus homepage
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/public-smoke.yml'
+      - '.github/workflows/pages.yml'
+permissions:
+  contents: read
+jobs:
+  public-smoke:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Verify live homepage and assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='https://stusaurus.github.io/stuffedsaurus-site'
+          for attempt in 1 2 3 4 5; do
+            if curl --fail --location --silent --show-error --retry 2 "$base/" -o /tmp/home.html && grep -q 'v514.css' /tmp/home.html; then
+              break
+            fi
+            if [ "$attempt" -eq 5 ]; then
+              echo 'Live homepage did not include the approved V5.14 layer'
+              exit 1
+            fi
+            sleep 15
+          done
+          for path in v512.css v512.js v513.css v513.js v514.css v514.js assets/hero-wide.webp assets/hero-mobile-v56.webp; do
+            echo "Checking $path"
+            curl --fail --location --silent --show-error --retry 3 --output /dev/null "$base/$path"
+          done
+          echo 'Published V5.14 homepage and essential assets responded successfully.'
