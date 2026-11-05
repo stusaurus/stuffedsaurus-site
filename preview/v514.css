@@ -15,3 +15,28 @@
  .character-copy .text-action {white-space:normal;min-height:44px}
 }
 @media(prefers-reduced-motion:reduce){html:focus-within{scroll-behavior:auto}}
+
+
+/* Gentle storybook affordances: keep approved illustrations untouched. */
+#home-manga .text-action,
+#home-friends .text-action,
+.discover-section .text-action {
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: .23em;
+  transition: color .16s ease, text-underline-offset .16s ease;
+}
+#home-manga .text-action:hover,
+#home-friends .text-action:hover,
+.discover-section .text-action:hover {
+  text-underline-offset: .34em;
+}
+@media (max-width:769px) {
+  #home-manga .text-action,
+  #home-friends .text-action,
+  .discover-section .text-action {touch-action:manipulation}
+}
+@media (prefers-reduced-motion:reduce) {
+  #home-manga .text-action,
+  #home-friends .text-action,
+  .discover-section .text-action {transition:none}
+}
