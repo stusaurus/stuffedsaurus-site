@@ -6,7 +6,6 @@
 #home-manga .feature-preview img {max-width:100%;height:auto}
 #home-manga .feature-preview {overflow:visible}
 #home-manga .text-action,#home-friends .text-action {display:inline-flex;align-items:center;min-height:44px}
-#home-manga .text-action::after,#home-friends .text-action::after {content:' ›';font-size:1.25em;padding-left:.3em}
 #home-manga,#home-friends,#home-updates {scroll-margin-top:76px}
 .character-story {scroll-margin-top:78px}
 @media(max-width:769px){
