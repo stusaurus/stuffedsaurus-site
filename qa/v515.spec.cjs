@@ -27,3 +27,25 @@ for(const width of [320,360,390,430,768,1024,1440]){
   await page.close();
  });
 }
+
+test('V5.15 mobile story navigation and menu',async({browser})=>{
+ const page=await browser.newPage({viewport:{width:390,height:844}});
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.goto('http://127.0.0.1:8765/preview-v515/',{waitUntil:'networkidle'});
+ for(const route of ['manga','friends','catalog']){
+  const link=page.locator('a[href="#/'+route+'"],a[href^="#/'+route+'/"]').filter({visible:true}).first();
+  await expect(link).toBeVisible();
+  await link.click();
+  await expect.poll(()=>new URL(page.url()).hash).toMatch(new RegExp('^#/'+route+'(?:/|$)'));
+  await page.goto('http://127.0.0.1:8765/preview-v515/',{waitUntil:'networkidle'});
+ }
+ const toggle=page.locator('#menu-toggle');
+ await expect(toggle).toBeVisible();
+ await toggle.click();
+ await expect(toggle).toHaveAttribute('aria-expanded','true');
+ await page.locator('.site-nav a[href="#/catalog"]').click();
+ await expect.poll(()=>new URL(page.url()).hash).toBe('#/catalog');
+ await expect(toggle).toHaveAttribute('aria-expanded','false');
+ expect(errors).toEqual([]);
+ await page.close();
+});
