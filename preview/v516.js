@@ -42,6 +42,11 @@
   nav.querySelectorAll('a[href^="#/"]').forEach(a=>apply(a));
   document.querySelectorAll('.mobile-nav-row a[href^="#/"]').forEach(a=>apply(a,true));
   const toggle=document.getElementById('menu-toggle');
+  const masthead=document.querySelector('.masthead');
+  const syncOverlay=()=>{
+    masthead?.classList.toggle('world-menu-open',nav.classList.contains('open'));
+  };
+  toggle?.addEventListener('click',()=>requestAnimationFrame(syncOverlay));
   if(toggle) toggle.setAttribute('aria-label','まちのあんないメニューを開く・閉じる');
   const highlight=()=>{
     const page=location.hash.replace(/^#\/?/,'').split('/')[0]||'home';
@@ -59,6 +64,7 @@
       if(!nav.classList.contains('open')) return;
       nav.classList.remove('open');
       toggle.setAttribute('aria-expanded','false');
+      syncOverlay();
     };
     document.addEventListener('keydown',event=>{
       if(event.key==='Escape' && nav.classList.contains('open')){
@@ -72,6 +78,7 @@
       }
     });
   }
-  window.addEventListener('hashchange',highlight);
+  window.addEventListener('hashchange',()=>{highlight();syncOverlay();});
   highlight();
+  syncOverlay();
 })();
