@@ -18,3 +18,24 @@ for(const width of widths){
     await page.close();
   });
 }
+
+
+test('V5.14 mobile routes and images',async({browser})=>{
+  const page=await browser.newPage({viewport:{width:390,height:844}});
+  const errors=[];
+  page.on('pageerror',e=>errors.push(e.message));
+  for(const route of ['home','manga','friends','catalog','news']){
+    await page.goto('http://127.0.0.1:8765/preview-v514/#/'+route,{waitUntil:'networkidle'});
+    await expect(page.locator('body')).toBeVisible();
+    const result=await page.evaluate(()=>({
+      scroll:document.documentElement.scrollWidth,
+      viewport:innerWidth,
+      broken:[...document.images].filter(img=>img.getClientRects().length && img.complete && img.naturalWidth===0).map(img=>img.src)
+    }));
+    expect(result.scroll,'horizontal overflow: '+route).toBeLessThanOrEqual(result.viewport+2);
+    expect(result.broken,'broken images: '+route).toEqual([]);
+    await page.screenshot({path:'test-results/v514-390-'+route+'.png',fullPage:true});
+  }
+  expect(errors).toEqual([]);
+  await page.close();
+});
