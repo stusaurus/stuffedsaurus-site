@@ -5,6 +5,8 @@ on:
     paths:
       - 'site.zip'
       - 'preview/v511.css'
+      - 'preview/v512.css'
+      - 'preview/v512.js'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -70,6 +72,28 @@ jobs:
           mv /tmp/stuffedsaurus-v511 public/preview-v511
           test -f public/preview-v511/index.html
           test -f public/index.html
+
+      - name: Build V5.12 review page without changing the live site
+        if: steps.bundle.outputs.present == 'true'
+        shell: bash
+        run: |
+          mkdir -p /tmp/stuffedsaurus-v512
+          cp -a public/assets /tmp/stuffedsaurus-v512/
+          cp public/index.html /tmp/stuffedsaurus-v512/index.html
+          cp preview/v512.css /tmp/stuffedsaurus-v512/v512.css
+          cp preview/v512.js /tmp/stuffedsaurus-v512/v512.js
+          python3 - <<'PY'
+          from pathlib import Path
+          file = Path('/tmp/stuffedsaurus-v512/index.html')
+          html = file.read_text(encoding='utf-8')
+          assert '</head>' in html and '</body>' in html
+          html = html.replace('</head>', '<link rel="stylesheet" href="v512.css"/>\n</head>', 1)
+          html = html.replace('</body>', '<script src="v512.js"></script>\n</body>', 1)
+          file.write_text(html, encoding='utf-8')
+          PY
+          mv /tmp/stuffedsaurus-v512 public/preview-v512
+          test -f public/index.html
+          test -f public/preview-v512/index.html
 
       - name: Configure GitHub Pages
         if: steps.bundle.outputs.present == 'true'
