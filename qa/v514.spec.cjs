@@ -58,3 +58,21 @@ test('V5.14 home links reach storybook sections',async({browser})=>{
  }
  await page.close();
 });
+
+
+test('V5.14 mobile menu is operable and closes after navigation',async({browser})=>{
+ const page=await browser.newPage({viewport:{width:390,height:844}});
+ await page.goto('http://127.0.0.1:8765/preview-v514/',{waitUntil:'networkidle'});
+ const toggle=page.locator('#menu-toggle');
+ await expect(toggle).toBeVisible();
+ await toggle.click();
+ await expect(toggle).toHaveAttribute('aria-expanded','true');
+ const menu=page.locator('.site-nav');
+ await expect(menu).toBeVisible();
+ const target=menu.locator('a[href="#/catalog"]');
+ await expect(target).toBeVisible();
+ await target.click();
+ await expect.poll(()=>new URL(page.url()).hash).toBe('#/catalog');
+ await expect(toggle).toHaveAttribute('aria-expanded','false');
+ await page.close();
+});
