@@ -2,7 +2,7 @@ const {test,expect}=require('@playwright/test');
 const base='http://127.0.0.1:8765/preview-v516/';
 const labels={
  home:'おうち',manga:'4コマのへや',friends:'なかまの広場',
- catalog:'ずかん',sns:'みんなの広場',games:'あそびば',
+ catalog:'ずかん',sns:'まちのアルバム',games:'あそびば',
  books:'えほんの森',goods:'たからばこ',news:'おたより'
 };
 for(const width of [320,360,390,430,768,770,1024,1440]){
@@ -23,7 +23,10 @@ for(const width of [320,360,390,430,768,770,1024,1440]){
    await expect(shortcuts.nth(1).locator('.world-nav-text')).toHaveText('4コマ');
    const toggle=page.locator('#menu-toggle');
    await expect(toggle).toBeVisible();
+   const heroBefore=await page.locator('.hero-shell').boundingBox();
    await toggle.click();
+   const heroAfter=await page.locator('.hero-shell').boundingBox();
+   expect(Math.abs(heroAfter.y-heroBefore.y),'menu must not push hero down').toBeLessThanOrEqual(2);
    await expect(toggle).toHaveAttribute('aria-expanded','true');
    await expect(page.locator('.site-nav a[href="#/friends"]')).toBeVisible();
    if(width===390)await page.screenshot({path:'test-results/v516-390-menu-open.png',fullPage:true});
@@ -61,5 +64,17 @@ test('V5.16 keyboard navigation and active section update',async({browser})=>{
  await expect.poll(()=>new URL(page.url()).hash).toBe('#/books');
  await expect(target).toHaveAttribute('aria-current','page');
  await expect(page.locator('.site-nav a[href="#/home"]')).not.toHaveAttribute('aria-current','page');
+ await page.close();
+});
+
+test('V5.16 Escape closes menu and returns focus to the toggle',async({browser})=>{
+ const page=await browser.newPage({viewport:{width:390,height:844}});
+ await page.goto(base,{waitUntil:'networkidle'});
+ const toggle=page.locator('#menu-toggle');
+ await toggle.click();
+ await expect(toggle).toHaveAttribute('aria-expanded','true');
+ await page.keyboard.press('Escape');
+ await expect(toggle).toHaveAttribute('aria-expanded','false');
+ await expect(toggle).toBeFocused();
  await page.close();
 });
