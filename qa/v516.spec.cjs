@@ -27,12 +27,16 @@ for(const width of [320,360,390,430,768,770,1024,1440]){
    await toggle.click();
    const heroAfter=await page.locator('.hero-shell').boundingBox();
    expect(Math.abs(heroAfter.y-heroBefore.y),'menu must not push hero down').toBeLessThanOrEqual(2);
+   await expect(page.locator('.masthead')).toHaveClass(/world-menu-open/);
+   const overlayFront=await page.evaluate(()=>!!document.elementFromPoint(200,460)?.closest('.site-nav'));
+   expect(overlayFront,'the menu must stay in front of manga cards').toBe(true);
    await expect(toggle).toHaveAttribute('aria-expanded','true');
    await expect(page.locator('.site-nav a[href="#/friends"]')).toBeVisible();
    if(width===390)await page.screenshot({path:'test-results/v516-390-menu-open.png',fullPage:true});
    await page.locator('.site-nav a[href="#/friends"]').click();
    await expect.poll(()=>new URL(page.url()).hash).toBe('#/friends');
    await expect(toggle).toHaveAttribute('aria-expanded','false');
+   await expect(page.locator('.masthead')).not.toHaveClass(/world-menu-open/);
   } else {
    await expect(page.locator('.site-nav a[href="#/manga"]')).toBeVisible();
    if(width===1440)await page.screenshot({path:'test-results/v516-1440-home.png',fullPage:true});
