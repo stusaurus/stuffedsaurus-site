@@ -102,3 +102,7 @@
     z-index:200;
   }
 }
+
+@media(max-width:769px){
+  .masthead.world-menu-open {position:relative;z-index:1000}
+}
