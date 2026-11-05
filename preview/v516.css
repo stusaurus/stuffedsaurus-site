@@ -1,0 +1,78 @@
+/* V5.16 — navigation that feels like a little town map, without new art. */
+.site-nav a[data-world-nav="v516"] {
+  text-decoration:none;
+  color:#63462e;
+  transition:background-color .16s ease,box-shadow .16s ease;
+}
+.site-nav a[data-world-nav="v516"]:focus-visible,
+.mobile-nav-row a[data-world-nav="v516"]:focus-visible,
+#menu-toggle:focus-visible {
+  outline:3px solid #6a9259;
+  outline-offset:3px;
+}
+.world-nav-glyph {font-weight:800;color:#9b7650;line-height:1}
+.world-nav-text {font-weight:800}
+.world-nav-hint {display:none}
+.site-nav a[data-world-nav="v516"][aria-current="page"] {
+  background:#f6e7bf;
+  box-shadow:inset 0 0 0 1px #e7c98a;
+  color:#4c5838;
+}
+@media(min-width:770px){
+  .site-nav a[data-world-nav="v516"] {
+    display:inline-flex;align-items:center;justify-content:center;
+    gap:5px;min-height:43px;
+    padding-inline:clamp(6px,1vw,14px);
+    border-radius:99px;white-space:nowrap;
+  }
+  .site-nav .world-nav-text{font-size:clamp(11px,.91vw,14px)}
+  .site-nav .world-nav-glyph{font-size:15px}
+  .site-nav a[data-world-nav="v516"]:hover{background:#fbedd3}
+}
+@media(max-width:769px){
+  .mobile-nav-row>a[data-world-nav="v516"]{gap:5px}
+  .mobile-nav-row .world-nav-glyph{font-size:15px}
+  .mobile-nav-row .world-nav-text{font-size:12px}
+  .mobile-nav-row .menu-button::after {content:'たんけん'}
+  .site-nav.open::before {
+    content:'✦ まちのあんない ✦';
+    display:block;text-align:center;
+    padding:10px 6px 12px;
+    color:#73583f;font-size:14px;font-weight:850;
+    letter-spacing:.09em;
+    border-bottom:1px dashed #dfc79f;
+    margin-bottom:4px;
+  }
+  .site-nav a[data-world-nav="v516"] {
+    display:grid;grid-template-columns:36px minmax(0,1fr);
+    grid-template-rows:auto auto;
+    column-gap:10px;row-gap:2px;
+    align-items:center;text-align:left;
+    min-height:56px;padding:9px 12px;
+    border-radius:12px;
+  }
+  .site-nav a[data-world-nav="v516"]+.site-nav a[data-world-nav="v516"]{
+    border-top:1px dashed rgba(185,147,101,.22);
+  }
+  .site-nav .world-nav-glyph {
+    grid-column:1;grid-row:1 / 3;
+    width:34px;height:34px;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    background:#f5e9ce;font-size:19px;
+  }
+  .site-nav .world-nav-text {grid-column:2;grid-row:1;font-size:15px;line-height:1.3}
+  .site-nav .world-nav-hint {
+    grid-column:2;grid-row:2;display:block;
+    font-size:11px;font-weight:550;color:#856d54;
+    line-height:1.4;
+  }
+  .site-nav a[data-world-nav="v516"]:hover{background:#f9edda}
+  .site-nav a[data-world-nav="v516"][aria-current="page"] .world-nav-glyph{background:#e3e9cb;color:#566c43}
+}
+@media(max-width:359px){
+ .mobile-nav-row .world-nav-text{font-size:11px}
+ .site-nav a[data-world-nav="v516"]{padding:8px 10px}
+}
+@media(prefers-reduced-motion:reduce){
+  .site-nav a[data-world-nav="v516"]{transition:none}
+}
