@@ -1,4 +1,4 @@
-name: V5.15 editorial preview browser QA
+name: V5.15 preview and homepage browser QA
 on:
   pull_request:
     paths:
@@ -50,6 +50,12 @@ jobs:
                   shutil.copy2(Path('preview/v515.css'),target/'v515.css')
                   html=html.replace('</head>','<link rel="stylesheet" href="v515.css"/>\n</head>',1)
               (target/'index.html').write_text(html,encoding='utf-8')
+          shutil.copy2(base/'preview-v515/index.html',base/'index.html')
+          shutil.copy2(base/'preview-v515/v515.css',base/'v515.css')
+          for layer in ('512','513','514'):
+              for ext in ('css','js'):
+                  shutil.copy2(base/'preview-v515'/f'v{layer}.{ext}',base/f'v{layer}.{ext}')
+          assert 'v515.css' in (base/'index.html').read_text(encoding='utf-8')
           PY
       - name: Run responsive browser QA
         run: |
