@@ -39,3 +39,22 @@ test('V5.14 mobile routes and images',async({browser})=>{
   expect(errors).toEqual([]);
   await page.close();
 });
+
+
+test('V5.14 home links reach storybook sections',async({browser})=>{
+ const page=await browser.newPage({viewport:{width:390,height:844}});
+ await page.goto('http://127.0.0.1:8765/preview-v514/',{waitUntil:'networkidle'});
+ const targets=['manga','friends','catalog'];
+ for(const route of targets){
+   const links=page.locator('a[href="#/'+route+'"],a[href^="#/'+route+'/"]');
+   const count=await links.count();
+   expect(count,'missing navigation link for '+route).toBeGreaterThan(0);
+   const link=links.first();
+   await expect(link).toBeVisible();
+   await link.click();
+   await expect.poll(()=>new URL(page.url()).hash).toMatch(new RegExp('^#/'+route+'(?:/|$)'));
+   await expect(page.locator('body')).toBeVisible();
+   await page.goto('http://127.0.0.1:8765/preview-v514/',{waitUntil:'networkidle'});
+ }
+ await page.close();
+});
