@@ -1,0 +1,47 @@
+/* StuffedSaurus V5.11 - consistent picture-book styling without cropping illustrations. */
+@media (max-width: 769px) {
+  .masthead { background: #fff7e9; }
+  .brandbar {
+    width: 100%; min-height: 112px; height: 112px; margin: 0;
+    padding: 5px 9px; display: flex; align-items: center; justify-content: flex-start;
+    background: linear-gradient(0deg,rgba(255,248,231,.92),rgba(255,248,231,.35)),
+      radial-gradient(circle at 2% 0%,#e0ebcc,transparent 28%),
+      radial-gradient(circle at 95% 10%,#d7e7e1,transparent 34%),#fdf1da;
+    position: relative;
+  }
+  .brandbar::before {
+    content:"";position:absolute;inset:0 auto auto 0;width:64px;height:110px;
+    background:url('assets/header-scene.webp') left top/auto 110px no-repeat;
+    pointer-events:none;opacity:.92;
+  }
+  .brandbar::after {
+    content:"";position:absolute;inset:0 0 auto auto;width:48px;height:112px;
+    background:url('assets/header-scene.webp') right top/auto 112px no-repeat;
+    pointer-events:none;opacity:.78;
+  }
+  .brand { position:relative;z-index:2;width:calc(100% - 60px);max-width:310px;height:auto;display:block; }
+  .brand picture{display:block;height:auto}
+  .brand img {
+    display:block;width:100%;max-width:none;height:auto;filter:none;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 6%,#000 93%,transparent 100%);
+    mask-image:linear-gradient(90deg,transparent 0%,#000 6%,#000 93%,transparent 100%);
+    mix-blend-mode:multiply;
+  }
+  .menu-button {
+    position:absolute;right:12px;top:40px;z-index:7;width:44px;height:44px;
+    background:rgba(255,248,232,.96);border:1.5px solid #dcbf91;
+    box-shadow:0 2px 4px rgba(82,57,30,.12);
+  }
+  .site-nav { top:105px;right:12px;background:rgba(255,249,233,.99); }
+  .hero-shell{background:#f4f0df}
+  .hero-foot{background:linear-gradient(180deg,#d8dfa7,#fff9ee)}
+  .home-sections{padding-top:34px}
+}
+@media (max-width:380px) {
+  .brandbar{height:96px;min-height:96px}
+  .brandbar::before{background-size:auto 96px;height:96px;width:56px}
+  .brandbar::after{background-size:auto 96px;height:96px;width:48px}
+  .brand{width:calc(100% - 59px)}
+  .menu-button{top:29px;right:8px}
+  .site-nav{top:92px}
+}
