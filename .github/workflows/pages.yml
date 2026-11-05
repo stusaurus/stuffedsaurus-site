@@ -157,6 +157,21 @@ jobs:
           PY
           grep -q 'v515.css' public/preview-v515/index.html
 
+      - name: Promote reviewed V5.15 to homepage (retain V5.14 for rollback)
+        if: steps.bundle.outputs.present == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f public/preview-v515/index.html
+          cp public/preview-v515/index.html public/index.html
+          cp public/preview-v515/v515.css public/v515.css
+          test -f public/preview-v514/index.html
+          test -f public/assets/hero-wide.webp
+          test -f public/assets/hero-mobile-v56.webp
+          grep -q 'v514.css' public/index.html
+          grep -q 'v515.css' public/index.html
+          echo 'V5.15 homepage staged; original archive and V5.14 preview retained.'
+
       - name: Configure GitHub Pages
         if: steps.bundle.outputs.present == 'true'
         uses: actions/configure-pages@v5
