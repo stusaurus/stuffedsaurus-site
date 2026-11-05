@@ -1,0 +1,42 @@
+/* V5.14: reading-first refinements layered on approved V5.13 art. */
+#home-manga .feature-preview a:focus-visible,
+#home-friends a:focus-visible,
+.discover-section a:focus-visible,
+.breadcrumb a:focus-visible {outline:3px solid #8a9e62;outline-offset:4px;border-radius:9px}
+#home-manga .feature-preview img {max-width:100%;height:auto}
+#home-manga .feature-preview {overflow:visible}
+#home-manga .text-action,#home-friends .text-action {display:inline-flex;align-items:center;min-height:44px}
+#home-manga,#home-friends,#home-updates {scroll-margin-top:76px}
+.character-story {scroll-margin-top:78px}
+@media(max-width:769px){
+ #home-manga .feature-preview {max-width:100%}
+ #home-manga .feature-preview img {width:100%;object-fit:contain}
+ .breadcrumb a {min-height:44px}
+ .character-copy .text-action {white-space:normal;min-height:44px}
+}
+@media(prefers-reduced-motion:reduce){html:focus-within{scroll-behavior:auto}}
+
+
+/* Gentle storybook affordances: keep approved illustrations untouched. */
+#home-manga .text-action,
+#home-friends .text-action,
+.discover-section .text-action {
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: .23em;
+  transition: color .16s ease, text-underline-offset .16s ease;
+}
+#home-manga .text-action:hover,
+#home-friends .text-action:hover,
+.discover-section .text-action:hover {
+  text-underline-offset: .34em;
+}
+@media (max-width:769px) {
+  #home-manga .text-action,
+  #home-friends .text-action,
+  .discover-section .text-action {touch-action:manipulation}
+}
+@media (prefers-reduced-motion:reduce) {
+  #home-manga .text-action,
+  #home-friends .text-action,
+  .discover-section .text-action {transition:none}
+}
