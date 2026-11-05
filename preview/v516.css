@@ -81,3 +81,24 @@
   .site-nav .world-nav-glyph{display:none}
   .site-nav .world-nav-text{font-size:11px}
 }
+
+/* Keep the town guide above the scene instead of pushing the hero down. */
+@media(max-width:769px){
+  .site-nav.open {
+    position:fixed;
+    top:calc(clamp(80px,24.6vw,114px) + 48px);
+    right:11px;
+    left:auto;
+    width:min(330px,calc(100vw - 22px));
+    max-width:none;
+    max-height:calc(100dvh - clamp(80px,24.6vw,114px) - 60px);
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    padding:8px;
+    border:2px solid #d7b98b;
+    border-radius:18px;
+    background:#fff9ec;
+    box-shadow:0 15px 35px rgba(76,57,31,.20);
+    z-index:200;
+  }
+}
