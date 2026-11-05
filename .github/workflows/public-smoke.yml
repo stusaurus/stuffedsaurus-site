@@ -1,6 +1,9 @@
 name: Verify published StuffedSaurus homepage
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/public-smoke.yml'
   push:
     branches: [main]
     paths:
