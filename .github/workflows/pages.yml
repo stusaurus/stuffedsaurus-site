@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - 'site.zip'
+      - 'preview/v511.css'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -50,6 +51,25 @@ jobs:
             echo "Incorrect Japanese brand spelling found"
             exit 1
           fi
+
+      - name: Build isolated V5.11 review page (keep live home unchanged)
+        if: steps.bundle.outputs.present == 'true'
+        shell: bash
+        run: |
+          mkdir -p /tmp/stuffedsaurus-v511
+          cp -a public/. /tmp/stuffedsaurus-v511/
+          cp preview/v511.css /tmp/stuffedsaurus-v511/v511.css
+          python3 - <<'PY'
+          from pathlib import Path
+          file = Path('/tmp/stuffedsaurus-v511/index.html')
+          html = file.read_text(encoding='utf-8')
+          assert '</head>' in html
+          html = html.replace('</head>', '<link rel="stylesheet" href="v511.css"/>\n</head>', 1)
+          file.write_text(html, encoding='utf-8')
+          PY
+          mv /tmp/stuffedsaurus-v511 public/preview-v511
+          test -f public/preview-v511/index.html
+          test -f public/index.html
 
       - name: Configure GitHub Pages
         if: steps.bundle.outputs.present == 'true'
