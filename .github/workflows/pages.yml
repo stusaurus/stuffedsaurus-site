@@ -26,10 +26,21 @@ jobs:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Unpack the approved site bundle
+      - name: Check for upload
+        id: bundle
         shell: bash
         run: |
-          test -s site.zip || { echo "site.zip is not uploaded yet"; exit 1; }
+          if [ -s site.zip ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "Upload site.zip to publish the site."
+          fi
+
+      - name: Unpack the approved site bundle
+        if: steps.bundle.outputs.present == 'true'
+        shell: bash
+        run: |
           mkdir -p public
           unzip -q site.zip -d public
           test -f public/index.html
@@ -41,11 +52,14 @@ jobs:
           fi
 
       - name: Configure GitHub Pages
+        if: steps.bundle.outputs.present == 'true'
         uses: actions/configure-pages@v5
       - name: Upload website files
+        if: steps.bundle.outputs.present == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: public
       - name: Deploy preview
+        if: steps.bundle.outputs.present == 'true'
         id: deployment
         uses: actions/deploy-pages@v4
