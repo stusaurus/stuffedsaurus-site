@@ -28,6 +28,17 @@
     },{passive:true});
     a.addEventListener('blur',()=>a.classList.remove('icon-pressed'));
   }
+  // Keep the navigation's visual order and keyboard focus order identical.
+  // Give the latest letters an early spot; friends close the town guide.
+  const nav=document.querySelector('.site-nav');
+  const friends=nav?.querySelector('a[data-world-icon="friends"]');
+  const news=nav?.querySelector('a[data-world-icon="news"]');
+  if(friends && news && friends.parentElement===news.parentElement){
+    const bookmark=document.createComment('friends position');
+    friends.replaceWith(bookmark);
+    news.replaceWith(friends);
+    bookmark.replaceWith(news);
+  }
   const toggle=document.getElementById('menu-toggle');
   if(toggle){
     const compass=document.createElementNS('http://www.w3.org/2000/svg','svg');
