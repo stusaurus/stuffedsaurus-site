@@ -16,6 +16,8 @@ on:
       - 'preview/v516.js'
       - 'preview/v517.css'
       - 'preview/v517.js'
+      - 'preview/v518.css'
+      - 'preview/v518.js'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -265,6 +267,37 @@ jobs:
           grep -q 'v517.css' public/index.html
           grep -q 'v517.js' public/index.html
           echo 'V5.17 illustrated menu promoted, V5.16 rollback remains available.'
+
+      - name: Assemble V5.18 home card order and preserve previous previews
+        if: steps.bundle.outputs.present == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p public/preview-v518
+          cp -a public/assets public/preview-v518/assets
+          cp public/index.html public/preview-v518/index.html
+          for layer in 512 513 514 516 517; do
+            cp "public/v${layer}.css" "public/preview-v518/v${layer}.css"
+            cp "public/v${layer}.js" "public/preview-v518/v${layer}.js"
+          done
+          cp public/v515.css public/preview-v518/v515.css
+          cp preview/v518.css public/preview-v518/v518.css
+          cp preview/v518.js public/preview-v518/v518.js
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('public/preview-v518/index.html')
+          html=p.read_text(encoding='utf-8')
+          assert 'v517.js' in html and 'v515.css' in html
+          html=html.replace('</head>','<link rel="stylesheet" href="v518.css"/>\n</head>',1)
+          html=html.replace('</body>','<script src="v518.js"></script>\n</body>',1)
+          p.write_text(html,encoding='utf-8')
+          PY
+          test -f public/preview-v517/index.html
+          cp public/preview-v518/index.html public/index.html
+          cp public/preview-v518/v518.css public/v518.css
+          cp public/preview-v518/v518.js public/v518.js
+          grep -q 'v518.css' public/index.html
+          grep -q 'v518.js' public/index.html
 
       - name: Configure GitHub Pages
         if: steps.bundle.outputs.present == 'true'
