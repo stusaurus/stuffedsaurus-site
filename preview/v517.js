@@ -21,5 +21,20 @@
     },{passive:true});
     a.addEventListener('blur',()=>a.classList.remove('icon-pressed'));
   }
+  const toggle=document.getElementById('menu-toggle');
+  if(toggle){
+    const compass=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    compass.setAttribute('viewBox','0 0 40 40');
+    compass.setAttribute('aria-hidden','true');
+    compass.setAttribute('focusable','false');
+    compass.classList.add('world-compass');
+    compass.innerHTML='<circle cx="20" cy="20" r="15.5" fill="#FFF3D8" stroke="#8B674A" stroke-width="2.5"/>' +
+      '<circle cx="20" cy="20" r="11.5" fill="none" stroke="#D5B48A" stroke-width="1.3" stroke-dasharray="1.5 3"/>' +
+      '<g class="compass-needle"><path d="M20 8l5.5 13L20 32l-5.5-11Z" fill="#D5886F" stroke="#7D5A45" stroke-width="1.8" stroke-linejoin="round"/>' +
+      '<path d="M20 8l5.5 13L20 21Z" fill="#A9CBAA" stroke="none"/><circle cx="20" cy="21" r="2.4" fill="#FFF4D4" stroke="#7D5A45" stroke-width="1"/></g>' +
+      '<path d="M20 2v3M20 35v3M2 20h3M35 20h3" stroke="#9AAF7E" stroke-width="2" stroke-linecap="round"/>';
+    toggle.replaceChildren(compass);
+    toggle.classList.add('illustrated-toggle');
+  }
   document.documentElement.classList.add('has-illustrated-nav');
 })();
