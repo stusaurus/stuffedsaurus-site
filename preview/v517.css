@@ -1,0 +1,242 @@
+/* V5.17 — picture-book art icons; never animate when idle. */
+.site-nav a.illustrated-nav,
+.mobile-nav-row a.illustrated-nav {
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+.site-nav a.illustrated-nav .world-nav-glyph,
+.mobile-nav-row a.illustrated-nav .world-nav-glyph {
+  padding:0;
+  background:transparent;
+  border:none;
+  border-radius:0;
+  color:inherit;
+}
+.nav-icon-svg{
+  width:100%;
+  height:100%;
+  display:block;
+  overflow:visible;
+  filter:drop-shadow(0 1px 1px rgba(100,65,35,.09));
+  transform-origin:center;
+  transition:transform .23s cubic-bezier(.22,1.5,.48,1),filter .22s ease;
+}
+.nav-icon-svg .icon-smoke,
+.nav-icon-svg .icon-roof,
+.nav-icon-svg .icon-page,
+.nav-icon-svg .icon-friends,
+.nav-icon-svg .icon-book,
+.nav-icon-svg .icon-footprint,
+.nav-icon-svg .icon-photo,
+.nav-icon-svg .icon-flower,
+.nav-icon-svg .icon-star,
+.nav-icon-svg .icon-trees,
+.nav-icon-svg .icon-leaf,
+.nav-icon-svg .icon-lid,
+.nav-icon-svg .icon-letter,
+.nav-icon-svg .icon-envelope{
+  transform-box:fill-box;
+  transform-origin:center;
+  transition:transform .24s cubic-bezier(.18,1.5,.40,1),opacity .22s ease;
+}
+.site-nav a.illustrated-nav.icon-pressed .nav-icon-svg,
+.mobile-nav-row a.illustrated-nav.icon-pressed .nav-icon-svg,
+.site-nav a.illustrated-nav:active .nav-icon-svg,
+.mobile-nav-row a.illustrated-nav:active .nav-icon-svg{
+  transform:translateY(2px) scale(.91);
+  filter:drop-shadow(0 0 0 transparent);
+  transition-duration:.09s;
+}
+/* Each icon has a different tiny story when intentionally activated. */
+@media (hover:hover) and (pointer:fine){
+  .site-nav a.illustrated-nav:hover .nav-icon-svg,
+  .mobile-nav-row a.illustrated-nav:hover .nav-icon-svg{
+    transform:translateY(-2px) scale(1.055);
+  }
+  .site-nav a[data-world-icon="home"]:hover .icon-smoke{transform:translateY(-5px);opacity:.45}
+  .site-nav a[data-world-icon="home"]:hover .icon-roof{transform:rotate(-3deg)}
+  .site-nav a[data-world-icon="manga"]:hover .icon-page{transform:rotate(-5deg)}
+  .site-nav a[data-world-icon="friends"]:hover .icon-friends{transform:translateY(-3px)}
+  .site-nav a[data-world-icon="catalog"]:hover .icon-footprint{transform:rotate(-9deg) scale(1.11)}
+  .site-nav a[data-world-icon="sns"]:hover .icon-photo{transform:rotate(2deg) translateY(-2px)}
+  .site-nav a[data-world-icon="sns"]:hover .icon-flower{transform:rotate(15deg)}
+  .site-nav a[data-world-icon="games"]:hover .icon-star{transform:rotate(12deg) scale(1.08)}
+  .site-nav a[data-world-icon="books"]:hover .icon-trees{transform:rotate(-3deg)}
+  .site-nav a[data-world-icon="goods"]:hover .icon-lid{transform:translateY(-4px) rotate(-5deg)}
+  .site-nav a[data-world-icon="news"]:hover .icon-letter{transform:translateY(-4px)}
+}
+.site-nav a.illustrated-nav:focus-visible .nav-icon-svg,
+.mobile-nav-row a.illustrated-nav:focus-visible .nav-icon-svg{
+  transform:translateY(-2px) scale(1.055);
+}
+.site-nav a[data-world-icon="goods"]:focus-visible .icon-lid{transform:translateY(-4px) rotate(-4deg)}
+.site-nav a[data-world-icon="manga"]:focus-visible .icon-page{transform:rotate(-5deg)}
+.site-nav a[data-world-icon="news"]:focus-visible .icon-letter{transform:translateY(-4px)}
+/* The 3x3 town board is primarily for touch screens. */
+@media (max-width:769px){
+  .site-nav.open{
+    width:min(370px,calc(100vw - 22px));
+    padding:12px;
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:7px;
+    align-content:start;
+    border:3px solid #c59c67;
+    border-radius:21px;
+    background:
+      radial-gradient(circle at 94% 3%,rgba(177,202,150,.27),transparent 25%),
+      radial-gradient(circle at 1% 88%,rgba(242,196,122,.18),transparent 27%),
+      linear-gradient(145deg,#fff9e9,#f6e3bc);
+    box-shadow:0 16px 34px rgba(62,44,26,.24), inset 0 0 0 3px rgba(255,255,246,.65);
+  }
+  .site-nav.open::before{
+    content:"✿  ティラノンのまち  ✿";
+    grid-column:1/-1;
+    text-align:center;
+    display:block;
+    color:#6b4b34;
+    font-size:14px;
+    font-weight:850;
+    letter-spacing:.07em;
+    padding:5px 0 11px;
+    margin:0 1px 4px;
+    border-bottom:2px dashed #d5b488;
+  }
+  .site-nav a.illustrated-nav{
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+    min-width:0;
+    min-height:101px;
+    padding:6px 3px 7px;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    border-radius:14px;
+    border:1.5px solid #ebcf9e;
+    background:linear-gradient(155deg,#fffefa,#fff3d9);
+    box-shadow:0 3px 0 #dfc59b,0 4px 7px rgba(110,77,38,.08);
+    transition:transform .19s cubic-bezier(.2,1.4,.35,1),background-color .16s ease,box-shadow .16s ease;
+    color:#60432d;
+  }
+  .site-nav a.illustrated-nav + a.illustrated-nav{border-top:1.5px solid #ebcf9e}
+  .site-nav a.illustrated-nav .world-nav-glyph{
+    display:block;
+    grid-column:auto;
+    grid-row:auto;
+    width:51px;
+    height:51px;
+    flex:none;
+    margin:0;
+  }
+  .site-nav a.illustrated-nav .world-nav-text{
+    display:block;
+    grid-column:auto;
+    grid-row:auto;
+    font-size:clamp(10px,2.8vw,12px);
+    line-height:1.3;
+    letter-spacing:-.01em;
+    font-weight:820;
+    min-height:1.35em;
+    white-space:normal;
+    overflow-wrap:anywhere;
+  }
+  .site-nav a.illustrated-nav .world-nav-hint{display:none}
+  .site-nav a.illustrated-nav[aria-current="page"]{
+    border-color:#9faf82;
+    background:linear-gradient(160deg,#f2f8e8,#e9f0d7);
+    box-shadow:0 3px 0 #b0c29d,0 4px 8px rgba(72,112,61,.13);
+  }
+  .site-nav a.illustrated-nav:active,
+  .site-nav a.illustrated-nav.icon-pressed{
+    transform:translateY(2px) scale(.97);
+    box-shadow:0 1px 0 #d7b58a;
+  }
+  .site-nav a.illustrated-nav .nav-icon-svg{width:51px;height:51px}
+  .mobile-nav-row a.illustrated-nav .world-nav-glyph{
+    display:block;width:26px;height:26px;flex:none;
+  }
+  .mobile-nav-row a.illustrated-nav .nav-icon-svg{width:26px;height:26px}
+  .mobile-nav-row a.illustrated-nav .world-nav-text{font-size:12px}
+  .mobile-nav-row .menu-button::after{content:"たんけん"}
+}
+@media(max-width:359px){
+  .site-nav.open{gap:5px;padding:8px}
+  .site-nav a.illustrated-nav{min-height:92px;padding:4px 2px}
+  .site-nav a.illustrated-nav .world-nav-glyph{width:45px;height:45px}
+  .site-nav a.illustrated-nav .nav-icon-svg{width:45px;height:45px}
+  .site-nav a.illustrated-nav .world-nav-text{font-size:10px}
+  .mobile-nav-row a.illustrated-nav .world-nav-glyph{width:21px;height:21px}
+  .mobile-nav-row a.illustrated-nav .nav-icon-svg{width:21px;height:21px}
+}
+@media(min-width:770px){
+  .site-nav a.illustrated-nav .world-nav-glyph{
+    width:27px;height:27px;
+    display:inline-flex;align-items:center;justify-content:center;
+    background:transparent;
+  }
+  .site-nav a.illustrated-nav .nav-icon-svg{width:27px;height:27px}
+  .site-nav a.illustrated-nav{min-height:48px;gap:4px}
+}
+@media(min-width:770px) and (max-width:1059px){
+  /* Space is limited on small laptop headers; keep words readable. */
+  .site-nav a.illustrated-nav .world-nav-glyph{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .site-nav a.illustrated-nav,
+  .mobile-nav-row a.illustrated-nav,
+  .nav-icon-svg,
+  .nav-icon-svg *,
+  .site-nav a.illustrated-nav:focus-visible .nav-icon-svg,
+  .site-nav a.illustrated-nav:hover .nav-icon-svg{
+    transition:none!important;
+    animation:none!important;
+    transform:none!important;
+  }
+}
+/* The mobile entrance is a hand-drawn explorer's compass. */
+.mobile-nav-row .menu-button.illustrated-toggle{
+  gap:3px;
+  color:#66472F;
+  font-weight:800;
+}
+.world-compass{
+  display:block;
+  width:28px;
+  height:28px;
+  flex:none;
+  transform-origin:center;
+  transition:transform .2s cubic-bezier(.2,1.4,.4,1);
+}
+.world-compass .compass-needle{
+  transform-origin:20px 21px;
+  transition:transform .24s cubic-bezier(.2,1.3,.45,1);
+}
+.mobile-nav-row .menu-button.illustrated-toggle[aria-expanded="true"] .compass-needle{
+  transform:rotate(28deg);
+}
+.mobile-nav-row .menu-button.illustrated-toggle:active .world-compass{transform:scale(.90)}
+@media(min-width:1260px){
+  .site-nav a.illustrated-nav .world-nav-glyph,
+  .site-nav a.illustrated-nav .nav-icon-svg{
+    width:32px;
+    height:32px;
+  }
+  .site-nav a.illustrated-nav{min-height:55px}
+}
+@media(prefers-reduced-motion:reduce){
+  .world-compass,
+  .world-compass .compass-needle{
+    transition:none!important;
+    transform:none!important;
+  }
+}
+
+/* Pointer-down must win over hover on desktop: a deliberate tactile press. */
+@media(prefers-reduced-motion:no-preference){
+  .site-nav a.illustrated-nav.icon-pressed .nav-icon-svg,
+  .mobile-nav-row a.illustrated-nav.icon-pressed .nav-icon-svg{
+    transform:translateY(2px) scale(.90);
+    transition-duration:.09s;
+  }
+}
