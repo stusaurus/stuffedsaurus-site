@@ -85,3 +85,39 @@ test('V5.17 respects reduced motion',async({browser})=>{
  expect(style.transition.split(',').every(s=>s.trim()==='0s')).toBe(true);
  await page.close();
 });
+
+test('V5.17 promoted root homepage displays interactive illustrated menu',async({browser})=>{
+ for(const width of [390,1440]){
+  const page=await browser.newPage({viewport:{width,height:850}});
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.goto('http://127.0.0.1:8765/',{waitUntil:'networkidle'});
+  await expect(page.locator('link[href="v517.css"]')).toHaveCount(1);
+  await expect(page.locator('script[src="v517.js"]')).toHaveCount(1);
+  await expect(page.locator('.site-nav a.illustrated-nav')).toHaveCount(9);
+  await expect(page.locator('.site-nav svg.nav-icon-svg')).toHaveCount(9);
+  if(width===390){
+   const toggle=page.locator('#menu-toggle');
+   await expect(toggle.locator('svg.world-compass')).toHaveCount(1);
+   await toggle.click();
+   await expect(toggle).toHaveAttribute('aria-expanded','true');
+   await expect(page.locator('.site-nav a[data-world-icon="books"]')).toBeVisible();
+   await page.screenshot({path:'test-results/v517-live-candidate-mobile.png',fullPage:true});
+   await page.locator('.site-nav a[href="#/catalog"]').click();
+   await expect.poll(()=>new URL(page.url()).hash).toBe('#/catalog');
+   await expect(toggle).toHaveAttribute('aria-expanded','false');
+  }else{
+   const item=page.locator('.site-nav a[data-world-icon="goods"]');
+   await item.hover();
+   await expect.poll(()=>item.locator('.nav-icon-svg').evaluate(el=>getComputedStyle(el).transform)).not.toBe('none');
+   await page.screenshot({path:'test-results/v517-live-candidate-desktop.png',fullPage:true});
+  }
+  const stats=await page.evaluate(()=>({
+   overflow:document.documentElement.scrollWidth-innerWidth,
+   broken:[...document.images].filter(img=>img.getClientRects().length&&img.complete&&!img.naturalWidth).map(img=>img.src)
+  }));
+  expect(stats.overflow).toBeLessThanOrEqual(2);
+  expect(stats.broken).toEqual([]);
+  expect(errors).toEqual([]);
+  await page.close();
+ }
+});
