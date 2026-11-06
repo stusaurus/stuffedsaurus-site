@@ -18,6 +18,7 @@ for(const width of [320,360,390,430,768,770,1024,1440]){
   if(width<=769){
     const toggle=page.locator('#menu-toggle');
     await expect(toggle).toBeVisible();
+    await expect(toggle.locator('svg.world-compass')).toHaveCount(1);
     await toggle.click();
     await expect(toggle).toHaveAttribute('aria-expanded','true');
     const nav=page.locator('.site-nav');
