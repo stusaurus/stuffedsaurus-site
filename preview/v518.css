@@ -1,0 +1,13 @@
+/* V5.18 — swap the two cards on おうち, not the global navigation.
+   Desktop: manga / notices on top, friends across the second row.
+   Mobile: manga, notices, then friends. All artwork and links stay untouched. */
+@media (min-width:770px){
+  .home-sections #home-manga{grid-column:1;grid-row:1}
+  .home-sections #home-updates{grid-column:2;grid-row:1;margin:0}
+  .home-sections #home-friends{grid-column:1 / -1;grid-row:2;margin:0}
+}
+@media (max-width:769px){
+  .home-sections #home-manga{order:0}
+  .home-sections #home-updates{order:1}
+  .home-sections #home-friends{order:2}
+}
