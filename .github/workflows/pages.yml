@@ -248,6 +248,24 @@ jobs:
           grep -q 'v517.js' public/preview-v517/index.html
           ! grep -q 'v517.js' public/index.html
 
+      - name: Promote reviewed V5.17 illustrated menu to homepage
+        if: steps.bundle.outputs.present == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f public/preview-v517/index.html
+          cp public/preview-v517/index.html public/index.html
+          cp public/preview-v517/v517.css public/v517.css
+          cp public/preview-v517/v517.js public/v517.js
+          test -f public/preview-v516/index.html
+          test -f public/preview-v515/index.html
+          test -f public/assets/hero-wide.webp
+          test -f public/assets/hero-mobile-v56.webp
+          grep -q 'v516.js' public/index.html
+          grep -q 'v517.css' public/index.html
+          grep -q 'v517.js' public/index.html
+          echo 'V5.17 illustrated menu promoted, V5.16 rollback remains available.'
+
       - name: Configure GitHub Pages
         if: steps.bundle.outputs.present == 'true'
         uses: actions/configure-pages@v5
