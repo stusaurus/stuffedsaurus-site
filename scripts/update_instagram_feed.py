@@ -13,6 +13,7 @@ import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 FEED = Path("preview/instagram-recent.json")
 ACCOUNT = "stuffed_saurus"
@@ -62,7 +63,7 @@ def normalize_rows(rows, old):
             content = re.sub(r"\s+", " ", (row.get("caption") or "").split("#", 1)[0]).strip()
             excerpt = content[:120].rstrip()
         found.append((stamp, {
-            "published_on": stamp.astimezone().date().isoformat(),
+            "published_on": stamp.astimezone(ZoneInfo('Asia/Tokyo')).date().isoformat(),
             "type": "reel", "title": title, "summary": excerpt, "url": url,
         }))
     found.sort(key=lambda item: item[0], reverse=True)
