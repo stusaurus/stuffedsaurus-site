@@ -37,7 +37,7 @@ jobs:
           target.mkdir()
           shutil.copytree(root/'assets',target/'assets')
           html=(root/'index.html').read_text(encoding='utf-8')
-          for layer in ('512','513','514','516','517','518'):
+          for layer in ('512','513','514'):
               for ext in ('css','js'):
                   src=Path('preview')/f'v{layer}.{ext}'
                   shutil.copy2(src,target/src.name)
@@ -45,6 +45,12 @@ jobs:
               html=html.replace('</body>',f'<script src="v{layer}.js"></script>\n</body>',1)
           shutil.copy2(Path('preview/v515.css'),target/'v515.css')
           html=html.replace('</head>','<link rel="stylesheet" href="v515.css"/>\n</head>',1)
+          for layer in ('516','517','518'):
+              for ext in ('css','js'):
+                  src=Path('preview')/f'v{layer}.{ext}'
+                  shutil.copy2(src,target/src.name)
+              html=html.replace('</head>',f'<link rel="stylesheet" href="v{layer}.css"/>\n</head>',1)
+              html=html.replace('</body>',f'<script src="v{layer}.js"></script>\n</body>',1)
           (target/'index.html').write_text(html,encoding='utf-8')
           assert 'v518.js' in html and 'v518.css' in html
           shutil.copy2(target/'index.html',root/'index.html')
