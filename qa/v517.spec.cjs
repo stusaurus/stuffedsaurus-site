@@ -31,11 +31,14 @@ for(const width of [320,360,390,430,768,770,1024,1440]){
     const first=items[0], fourth=items[3];
     expect(Math.abs(first.x-fourth.x)).toBeLessThan(3);
     const heroBefore=await page.locator('.hero-shell').boundingBox();
-    await page.locator('.site-nav a[href="#/books"]').click();
-    await expect.poll(()=>new URL(page.url()).hash).toBe('#/books');
+    await toggle.click();
     await expect(toggle).toHaveAttribute('aria-expanded','false');
     const heroAfter=await page.locator('.hero-shell').boundingBox();
     expect(Math.abs(heroBefore.y-heroAfter.y)).toBeLessThanOrEqual(2);
+    await toggle.click();
+    await page.locator('.site-nav a[href="#/books"]').click();
+    await expect.poll(()=>new URL(page.url()).hash).toBe('#/books');
+    await expect(toggle).toHaveAttribute('aria-expanded','false');
     if(width===390){
       await page.goto(url,{waitUntil:'networkidle'});
       await page.locator('#menu-toggle').click();
