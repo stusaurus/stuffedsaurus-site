@@ -231,3 +231,12 @@
     transform:none!important;
   }
 }
+
+/* Pointer-down must win over hover on desktop: a deliberate tactile press. */
+@media(prefers-reduced-motion:no-preference){
+  .site-nav a.illustrated-nav.icon-pressed .nav-icon-svg,
+  .mobile-nav-row a.illustrated-nav.icon-pressed .nav-icon-svg{
+    transform:translateY(2px) scale(.90);
+    transition-duration:.09s;
+  }
+}
