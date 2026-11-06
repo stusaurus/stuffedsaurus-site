@@ -14,6 +14,8 @@ on:
       - 'preview/v515.css'
       - 'preview/v516.css'
       - 'preview/v516.js'
+      - 'preview/v517.css'
+      - 'preview/v517.js'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -218,6 +220,33 @@ jobs:
           grep -q 'v516.css' public/index.html
           grep -q 'v516.js' public/index.html
           echo 'V5.16 homepage assembled; older releases preserved for rollback.'
+
+      - name: Assemble isolated V5.17 illustrated menu preview
+        if: steps.bundle.outputs.present == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p public/preview-v517
+          cp -a public/assets public/preview-v517/assets
+          cp public/index.html public/preview-v517/index.html
+          for layer in 512 513 514 516; do
+            cp "public/v${layer}.css" "public/preview-v517/v${layer}.css"
+            cp "public/v${layer}.js" "public/preview-v517/v${layer}.js"
+          done
+          cp public/v515.css public/preview-v517/v515.css
+          cp preview/v517.css public/preview-v517/v517.css
+          cp preview/v517.js public/preview-v517/v517.js
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('public/preview-v517/index.html')
+          html=p.read_text(encoding='utf-8')
+          assert 'v516.js' in html and 'v515.css' in html
+          html=html.replace('</head>','<link rel="stylesheet" href="v517.css"/>\n</head>',1)
+          html=html.replace('</body>','<script src="v517.js"></script>\n</body>',1)
+          p.write_text(html,encoding='utf-8')
+          PY
+          grep -q 'v517.js' public/preview-v517/index.html
+          ! grep -q 'v517.js' public/index.html
 
       - name: Configure GitHub Pages
         if: steps.bundle.outputs.present == 'true'
