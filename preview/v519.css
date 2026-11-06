@@ -94,3 +94,14 @@
   #home-friends .friend-chat-button:hover,
   #home-friends .friend-chat-button:active{transform:none}
 }
+
+/* Keep the existing keyboard skip link, but prevent a scrolled screenshot
+   or mouse interaction from painting it over character art. */
+.skip-link:not(:focus-visible){
+  opacity:0;
+  pointer-events:none;
+}
+.skip-link:focus-visible{
+  opacity:1;
+  pointer-events:auto;
+}
