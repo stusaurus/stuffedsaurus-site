@@ -18,6 +18,8 @@ on:
       - 'preview/v517.js'
       - 'preview/v518.css'
       - 'preview/v518.js'
+      - 'preview/v519.css'
+      - 'preview/v519.js'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -298,6 +300,38 @@ jobs:
           cp public/preview-v518/v518.js public/v518.js
           grep -q 'v518.css' public/index.html
           grep -q 'v518.js' public/index.html
+
+      - name: Build V5.19 character conversations and preserve previous version
+        if: steps.bundle.outputs.present == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p public/preview-v519
+          cp -a public/assets public/preview-v519/assets
+          cp public/index.html public/preview-v519/index.html
+          for layer in 512 513 514 516 517 518; do
+            cp "public/v${layer}.css" "public/preview-v519/v${layer}.css"
+            cp "public/v${layer}.js" "public/preview-v519/v${layer}.js"
+          done
+          cp public/v515.css public/preview-v519/v515.css
+          cp preview/v519.css public/preview-v519/v519.css
+          cp preview/v519.js public/preview-v519/v519.js
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('public/preview-v519/index.html')
+          html=p.read_text(encoding='utf-8')
+          assert 'v518.js' in html
+          html=html.replace('</head>','<link rel="stylesheet" href="v519.css"/>\n</head>',1)
+          html=html.replace('</body>','<script src="v519.js"></script>\n</body>',1)
+          p.write_text(html,encoding='utf-8')
+          PY
+          test -f public/preview-v518/index.html
+          test -f public/preview-v519/index.html
+          cp public/preview-v519/index.html public/index.html
+          cp public/preview-v519/v519.css public/v519.css
+          cp public/preview-v519/v519.js public/v519.js
+          grep -q 'v519.css' public/index.html
+          grep -q 'v519.js' public/index.html
 
       - name: Configure GitHub Pages
         if: steps.bundle.outputs.present == 'true'

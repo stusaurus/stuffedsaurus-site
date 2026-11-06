@@ -1,0 +1,107 @@
+/* V5.19 — tactile storybook dialogue, without transforming character art. */
+#home-friends .friend-chat{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  margin:17px auto 9px;
+  max-width:720px;
+}
+#home-friends .friend-chat-button{
+  appearance:none;
+  border:1.5px solid #D4A66B;
+  border-radius:999px;
+  min-height:44px;
+  padding:10px 17px;
+  background:linear-gradient(165deg,#FFF8DF,#F4D89D);
+  box-shadow:0 3px 0 #DAB87D;
+  color:#63452E;
+  font:inherit;
+  font-size:14px;
+  font-weight:850;
+  line-height:1.35;
+  letter-spacing:.02em;
+  cursor:pointer;
+  flex:0 0 auto;
+  transition:transform .16s ease,box-shadow .16s ease,background .16s ease;
+}
+#home-friends .friend-chat-button::before{
+  content:'✿';
+  display:inline-block;
+  color:#739B70;
+  margin-right:6px;
+}
+#home-friends .friend-chat-button:hover{
+  background:linear-gradient(165deg,#FFF6E5,#EBD49A);
+  transform:translateY(-2px);
+  box-shadow:0 5px 0 #DAB87D;
+}
+#home-friends .friend-chat-button:active{
+  transform:translateY(2px) scale(.98);
+  box-shadow:0 1px 0 #DAB87D;
+}
+#home-friends .friend-chat-button:focus-visible{
+  outline:3px solid #638C59;
+  outline-offset:3px;
+}
+#home-friends .friend-voice{
+  min-width:0;
+  flex:1 1 245px;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:baseline;
+  gap:5px 9px;
+  padding:11px 17px;
+  margin:0;
+  border:1.5px solid #D8C8A5;
+  border-radius:18px 18px 18px 5px;
+  background:#FFFBEC;
+  box-shadow:0 3px 11px rgba(95,72,42,.07);
+  color:#5C4733;
+  font-size:13px;
+  line-height:1.7;
+  overflow-wrap:anywhere;
+}
+#home-friends .friend-voice[hidden]{display:none}
+#home-friends .friend-voice-name{color:#547A53;white-space:nowrap}
+#home-friends .friend-voice-pop{animation:friend-voice-appear .26s ease-out 1}
+@keyframes friend-voice-appear{
+  from{opacity:.65;transform:translateY(5px)}
+  to{opacity:1;transform:translateY(0)}
+}
+#home-friends .friend-grid a.friend{
+  transition:background-color .18s ease,box-shadow .18s ease,outline-color .18s ease;
+}
+#home-friends .friend-grid a.friend.friend-speaking{
+  background:#FFF7DC;
+  box-shadow:0 0 0 3px #D2DEAC,0 4px 11px rgba(84,102,63,.12);
+  border-radius:12px;
+}
+#home-friends .friend-grid a.friend.friend-speaking:focus-visible{
+  outline:3px solid #638C59;
+  outline-offset:4px;
+}
+@media(max-width:769px){
+  #home-friends .friend-chat{gap:10px;margin-top:14px}
+  #home-friends .friend-chat-button{font-size:13px}
+  #home-friends .friend-voice{flex-basis:100%;font-size:12px;line-height:1.65}
+}
+@media(prefers-reduced-motion:reduce){
+  #home-friends .friend-voice-pop{animation:none}
+  #home-friends .friend-chat-button,
+  #home-friends .friend-grid a.friend{transition:none}
+  #home-friends .friend-chat-button:hover,
+  #home-friends .friend-chat-button:active{transform:none}
+}
+
+/* Keep the existing keyboard skip link, but prevent a scrolled screenshot
+   or mouse interaction from painting it over character art. */
+.skip-link:not(:focus-visible){
+  opacity:0;
+  pointer-events:none;
+}
+.skip-link:focus-visible{
+  opacity:1;
+  pointer-events:auto;
+}

@@ -1,0 +1,26 @@
+name: Source snapshot for visual QA
+on:
+  pull_request:
+    paths:
+      - 'preview/**'
+      - 'qa/**'
+      - 'site.zip'
+      - '.github/workflows/source-snapshot.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  snapshot:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Export site archive and preview overlays for design inspection
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-snapshot
+          path: |
+            site.zip
+            preview/
+          if-no-files-found: error
+          retention-days: 3
