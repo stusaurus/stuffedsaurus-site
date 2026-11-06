@@ -5,6 +5,7 @@ on:
       - 'preview/**'
       - 'qa/**'
       - 'site.zip'
+      - '.github/workflows/pages.yml'
       - '.github/workflows/v519-qa.yml'
   workflow_dispatch:
 permissions:
@@ -18,18 +19,51 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Inspect existing character section structure
-        shell: bash
+      - name: Install Chromium Playwright
+        run: |
+          npm install --no-save @playwright/test@1.58.2
+          npx playwright install --with-deps chromium
+      - name: Build V5.19 release candidate
         run: |
           python3 - <<'PY'
-          from zipfile import ZipFile
           from pathlib import Path
+          from zipfile import ZipFile
+          import shutil
+          root=Path('public')
+          root.mkdir(exist_ok=True)
           with ZipFile('site.zip') as z:
-              names=z.namelist()
-              print('ZIP HTML FILES:', [n for n in names if n.endswith('.html')][:10])
-              s=z.read('index.html').decode('utf-8')
-          p=s.find('id="home-friends"')
-          if p<0: p=s.find("id='home-friends'")
-          assert p>=0
-          print('HOME FRIENDS SOURCE:', s[max(0,p-500):p+6000].replace('\\n','\n'))
+              z.extractall(root)
+          target=root/'preview-v519'
+          target.mkdir()
+          shutil.copytree(root/'assets',target/'assets')
+          html=(root/'index.html').read_text(encoding='utf-8')
+          for layer in ('512','513','514'):
+              for ext in ('css','js'):
+                  src=Path('preview')/f'v{layer}.{ext}'
+                  shutil.copy2(src,target/src.name)
+              html=html.replace('</head>',f'<link rel="stylesheet" href="v{layer}.css"/>\n</head>',1)
+              html=html.replace('</body>',f'<script src="v{layer}.js"></script>\n</body>',1)
+          shutil.copy2(Path('preview/v515.css'),target/'v515.css')
+          html=html.replace('</head>','<link rel="stylesheet" href="v515.css"/>\n</head>',1)
+          for layer in ('516','517','518','519'):
+              for ext in ('css','js'):
+                  src=Path('preview')/f'v{layer}.{ext}'
+                  shutil.copy2(src,target/src.name)
+              html=html.replace('</head>',f'<link rel="stylesheet" href="v{layer}.css"/>\n</head>',1)
+              html=html.replace('</body>',f'<script src="v{layer}.js"></script>\n</body>',1)
+          (target/'index.html').write_text(html,encoding='utf-8')
+          shutil.copy2(target/'index.html',root/'index.html')
+          for src in target.glob('v5*'):
+              shutil.copy2(src,root/src.name)
+          assert html.count('v519.css')==1 and html.count('v519.js')==1
           PY
+      - name: Browser-test conversations and character routes
+        run: |
+          python3 -m http.server 8765 -d public >/tmp/stuffedsaurus-http.log 2>&1 &
+          npx playwright test qa/v519.spec.cjs --reporter=line
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v519-character-discovery-screenshots
+          path: test-results/
+          if-no-files-found: ignore
