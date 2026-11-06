@@ -1,0 +1,35 @@
+name: V5.19 character discovery QA
+on:
+  pull_request:
+    paths:
+      - 'preview/**'
+      - 'qa/**'
+      - 'site.zip'
+      - '.github/workflows/v519-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  character-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Inspect existing character section structure
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from zipfile import ZipFile
+          from pathlib import Path
+          with ZipFile('site.zip') as z:
+              names=z.namelist()
+              print('ZIP HTML FILES:', [n for n in names if n.endswith('.html')][:10])
+              s=z.read('index.html').decode('utf-8')
+          p=s.find('id="home-friends"')
+          if p<0: p=s.find("id='home-friends'")
+          assert p>=0
+          print('HOME FRIENDS SOURCE:', s[max(0,p-500):p+6000].replace('\\n','\n'))
+          PY
