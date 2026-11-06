@@ -40,6 +40,13 @@ for(const width of [320,360,390,430,768,770,1024,1440]){
   if(width>900)expect(layout.cardWidth).toBeGreaterThanOrEqual(400);
   expect(layout.narrow).toBe(layout.embedWidth<326);
   if(layout.narrow)await expect(section.locator('.instagram-embed-fallback').first()).toBeVisible();
+  // Reels are 9:16 portrait. A landscape placeholder was the visible
+  // "squashed" state in browsers where Instagram's embed cannot load.
+  const poster=await section.locator('.instagram-embed-fallback').first().evaluate(el=>{
+    const r=el.getBoundingClientRect();
+    return {width:r.width,height:r.height};
+  });
+  expect(poster.width/poster.height,'portrait 9:16 reel placeholder at '+width).toBeCloseTo(9/16,1);
   await expect(page.locator('#view-sns .content-footnote')).not.toContainText('表示していません');
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
   expect(overflow).toBeLessThanOrEqual(2);
@@ -76,4 +83,32 @@ test('V5.20 gracefully handles feed fetch failure',async({browser})=>{
  await expect(page.locator('.instagram-recent-meta')).toContainText('取得できませんでした');
  await expect(page.locator('.instagram-recent-grid a')).toHaveAttribute('href','https://www.instagram.com/stuffed_saurus/');
  await page.close();
+});
+
+test('V5.22 CSS does not overwrite native Instagram iframe width or height',async({browser})=>{
+ for(const width of [390,1440]){
+  const page=await browser.newPage({viewport:{width,height:850}});
+  await page.route('https://www.instagram.com/embed.js',route=>route.fulfill({
+   status:200,contentType:'application/javascript',
+   body:'window.instgrm={Embeds:{process(){}}};'
+  }));
+  await page.goto(base+'#/sns',{waitUntil:'domcontentloaded'});
+  const embed=page.locator('#view-sns .instagram-reel-embed').first();
+  await expect(embed).toBeVisible();
+  const measurement=await embed.evaluate(el=>{
+    const iframe=document.createElement('iframe');
+    iframe.className='instagram-media';
+    iframe.title='Instagram-native-geometry-probe';
+    const frameWidth=Math.min(326,Math.floor(el.getBoundingClientRect().width));
+    const frameHeight=Math.round(frameWidth*16/9);
+    iframe.style.width=frameWidth+'px';
+    iframe.style.height=frameHeight+'px';
+    el.append(iframe);
+    const rect=iframe.getBoundingClientRect();
+    return {expectedWidth:frameWidth,expectedHeight:frameHeight,width:rect.width,height:rect.height};
+  });
+  expect(Math.abs(measurement.width-measurement.expectedWidth)).toBeLessThanOrEqual(1);
+  expect(Math.abs(measurement.height-measurement.expectedHeight)).toBeLessThanOrEqual(1);
+  await page.close();
+ }
 });
