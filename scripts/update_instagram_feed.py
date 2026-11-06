@@ -40,7 +40,7 @@ def instagram_post_url(value):
 
 def title_from_caption(caption):
     clean = re.sub(r"\s+", " ", (caption or "").split("#", 1)[0]).strip()
-    return clean[:54].rstrip() if clean else "ティラノンの新しいリール"
+    return clean[:54].rstrip() if clean else "ティラノンの新しい投稿"
 
 
 def normalize_rows(rows, old):
@@ -48,8 +48,8 @@ def normalize_rows(rows, old):
     found = []
     for row in rows:
         url = row.get("permalink")
-        if not reel_url(url):
-            continue  # This first iteration deliberately displays posts only.
+        if not instagram_post_url(url):
+            continue
         try:
             stamp = datetime.fromisoformat(row["timestamp"].replace("Z", "+00:00"))
             if stamp.tzinfo is None:
@@ -92,7 +92,7 @@ def main():
             print("No eligible public posts were returned; keeping existing snapshot.")
             return 0
         if old.get("items") == updates and old.get("auto_updated"):
-            print("Instagram reel selection unchanged; no commit needed.")
+            print("Instagram post selection unchanged; no commit needed.")
             return 0
         payload = {
             "account": ACCOUNT,
