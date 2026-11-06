@@ -43,7 +43,7 @@
       const posts=data.items.filter(p=>p&&isInstagramUrl(p.url)&&/^\d{4}-\d{2}-\d{2}$/.test(p.published_on)).slice(0,3);
       if(posts.length===0)throw new Error('empty feed');
       const checked=/^\d{4}-\d{2}-\d{2}$/.test(data.checked_at||'') ? data.checked_at.replaceAll('-','/') : '日付不明';
-      meta.textContent=checked+'に確認した投稿です。新しい投稿への自動更新は準備中です。';
+      meta.textContent=data.auto_updated ? checked+'にInstagram連携で更新した投稿です。' : checked+'に確認した投稿です。新しい投稿への自動更新は準備中です。';
       for(const post of posts){
         const card=elem('article','instagram-recent-card');
         const info=elem('div','instagram-recent-caption');
