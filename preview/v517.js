@@ -8,6 +8,13 @@
   const routeOf = a => (a.getAttribute('href')||'').match(/^#\/([a-z]+)(?:\/|$)/)?.[1];
   for(const a of document.querySelectorAll('.site-nav a[data-world-nav="v516"],.mobile-nav-row a[data-world-nav="v516"]')){
     const route=routeOf(a), slot=a.querySelector('.world-nav-glyph');
+    // The text identifies the destination; the picture is free to tell a story.
+    const destinationNames={games:'ゲーム',goods:'グッズ'};
+    if(Object.hasOwn(destinationNames,route)){
+      const label=a.querySelector('.world-nav-text');
+      if(label)label.textContent=destinationNames[route];
+      a.setAttribute('aria-label',destinationNames[route]+'のページ');
+    }
     if(!Object.hasOwn(art,route)||!slot)continue;
     slot.innerHTML=svgFor(route);
     slot.setAttribute('aria-hidden','true');

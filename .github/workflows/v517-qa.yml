@@ -1,4 +1,4 @@
-name: V5.17 illustrated menu browser QA
+name: V5.17 illustrated menu + release QA
 on:
   pull_request:
     paths:
@@ -54,6 +54,12 @@ jobs:
               html=html.replace('</body>',f'<script src="v{layer}.js"></script>\n</body>',1)
           (target/'index.html').write_text(html,encoding='utf-8')
           assert html.count('v517.css')==1 and html.count('v517.js')==1
+          shutil.copy2(target/'index.html',root/'index.html')
+          for layer in ('512','513','514','516','517'):
+              for ext in ('css','js'):
+                  shutil.copy2(target/f'v{layer}.{ext}',root/f'v{layer}.{ext}')
+          shutil.copy2(target/'v515.css',root/'v515.css')
+          assert 'v517.js' in (root/'index.html').read_text(encoding='utf-8')
           PY
       - name: Run illustrated menu interaction tests
         run: |
