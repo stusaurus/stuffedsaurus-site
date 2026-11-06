@@ -66,17 +66,17 @@
   border-radius:13px;
   background:linear-gradient(145deg,#faf0e0,#f0e8cb);
 }
-#view-sns .instagram-reel-embed .instagram-media{
+#view-sns .instagram-reel-embed blockquote.instagram-media{
   min-width:0!important;
   max-width:100%!important;
   margin:0 auto!important;
   border:0!important;
   background:transparent!important;
 }
+/* Preserve Instagram's own iframe dimensions. Changing only width distorted
+   the video; the height comes from embed.js and must remain paired with it. */
 #view-sns .instagram-reel-embed iframe{
-  width:100%!important;
-  max-width:100%!important;
-  border:0!important;
+  border:0;
 }
 #view-sns .instagram-embed-fallback{
   display:flex;
@@ -178,15 +178,14 @@
   overflow:visible;
   border-radius:13px;
 }
-#view-sns .instagram-reel-embed .instagram-media{
+#view-sns .instagram-reel-embed blockquote.instagram-media{
   min-width:326px!important;
   width:100%!important;
   box-sizing:border-box!important;
 }
 #view-sns .instagram-reel-embed iframe{
-  width:100%;
-  max-width:100%;
-  /* Instagram owns the iframe height and portrait ratio. Never force it. */
+  /* Width AND height are entirely managed by Instagram's embed script. */
+  border:0;
 }
 @media(max-width:900px){
   #view-sns .instagram-recent{max-width:540px}
@@ -208,11 +207,40 @@
   display:block;
   min-height:175px;
 }
-#view-sns .instagram-embed-small .instagram-reel-embed .instagram-media{
+#view-sns .instagram-embed-small .instagram-reel-embed blockquote.instagram-media{
   display:block;
   min-width:0!important;
   width:100%!important;
 }
 #view-sns .instagram-embed-small .instagram-embed-fallback{
   min-height:175px;
+}
+
+/* V5.22 — Reels are PORTRAIT. The unavailable/loading state must be
+   9:16, not the previous shallow landscape rectangle. */
+#view-sns .instagram-reel-embed .instagram-embed-fallback{
+  box-sizing:border-box;
+  width:100%;
+  aspect-ratio:9 / 16;
+  min-height:0;
+  border-radius:16px;
+  gap:16px;
+  padding:clamp(12px,4vw,24px);
+  background:
+    radial-gradient(ellipse at 24% 10%,rgba(159,199,170,.45),transparent 36%),
+    radial-gradient(ellipse at 83% 86%,rgba(249,194,141,.38),transparent 40%),
+    linear-gradient(160deg,#fbefdf 0%,#f4e1bc 100%);
+  line-height:1.65;
+}
+#view-sns .instagram-reel-embed .instagram-embed-fallback::before{
+  flex:none;
+  width:70px;
+  height:70px;
+  font-size:27px;
+}
+/* Do not assign an aspect ratio or forced height to the Instagram iframe.
+   The embed SDK controls its responsive portrait rendition. */
+#view-sns .instagram-reel-embed iframe.instagram-media,
+#view-sns .instagram-reel-embed iframe{
+  aspect-ratio:auto;
 }
