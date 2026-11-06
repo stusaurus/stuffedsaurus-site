@@ -25,6 +25,21 @@ for(const width of [320,360,390,430,768,770,1024,1440]){
    await expect(card.locator('blockquote.instagram-media')).toHaveAttribute('data-instgrm-permalink',reels[i]);
    await expect(card.locator('a.instagram-recent-open')).toHaveAttribute('rel','noopener noreferrer');
   }
+  const layout=await page.evaluate(()=>{
+    const gallery=document.querySelector('#view-sns .instagram-recent-grid');
+    const card=gallery.querySelector('.instagram-recent-card');
+    const embed=gallery.querySelector('.instagram-reel-embed');
+    return {
+      columns:getComputedStyle(gallery).gridTemplateColumns.trim().split(/\s+/).length,
+      cardWidth:card.getBoundingClientRect().width,
+      embedWidth:embed.getBoundingClientRect().width,
+      narrow:gallery.closest('.instagram-recent').classList.contains('instagram-embed-small')
+    };
+  });
+  expect(layout.columns).toBe(width>900?2:1);
+  if(width>900)expect(layout.cardWidth).toBeGreaterThanOrEqual(400);
+  expect(layout.narrow).toBe(layout.embedWidth<326);
+  if(layout.narrow)await expect(section.locator('.instagram-embed-fallback').first()).toBeVisible();
   await expect(page.locator('#view-sns .content-footnote')).not.toContainText('表示していません');
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);
   expect(overflow).toBeLessThanOrEqual(2);

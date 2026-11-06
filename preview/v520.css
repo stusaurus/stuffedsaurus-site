@@ -152,3 +152,67 @@
   color:#41654d;
   border-color:#9cac7b;
 }
+
+/* V5.21: an Instagram reel needs breathing room, especially on a wide screen.
+   Never squeeze three native embeds into narrow 1/3-width cards. */
+#view-sns .instagram-recent{
+  max-width:960px;
+}
+#view-sns .instagram-recent-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  justify-content:center;
+  gap:22px;
+}
+#view-sns .instagram-recent-card{
+  width:100%;
+  max-width:100%;
+  box-sizing:border-box;
+  padding:15px;
+}
+#view-sns .instagram-recent-grid>.instagram-recent-card:last-child:nth-child(odd){
+  grid-column:1/-1;
+  width:min(100%,460px);
+  justify-self:center;
+}
+#view-sns .instagram-reel-embed{
+  overflow:visible;
+  border-radius:13px;
+}
+#view-sns .instagram-reel-embed .instagram-media{
+  min-width:326px!important;
+  width:100%!important;
+  box-sizing:border-box!important;
+}
+#view-sns .instagram-reel-embed iframe{
+  width:100%;
+  max-width:100%;
+  /* Instagram owns the iframe height and portrait ratio. Never force it. */
+}
+@media(max-width:900px){
+  #view-sns .instagram-recent{max-width:540px}
+  #view-sns .instagram-recent-grid{
+    grid-template-columns:minmax(0,1fr);
+    gap:18px;
+  }
+  #view-sns .instagram-recent-grid>.instagram-recent-card:last-child:nth-child(odd){
+    grid-column:auto;
+    width:100%;
+  }
+}
+@media(max-width:420px){
+  #view-sns .instagram-recent-card{padding:9px}
+}
+/* On a very narrow screen a native Instagram embed cannot meet its 326px
+   minimum. Display the direct play link rather than distorting the iframe. */
+#view-sns .instagram-embed-small .instagram-reel-embed{
+  display:block;
+  min-height:175px;
+}
+#view-sns .instagram-embed-small .instagram-reel-embed .instagram-media{
+  display:block;
+  min-width:0!important;
+  width:100%!important;
+}
+#view-sns .instagram-embed-small .instagram-embed-fallback{
+  min-height:175px;
+}
