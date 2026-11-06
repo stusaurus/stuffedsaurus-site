@@ -72,7 +72,10 @@
       const old=root.querySelector('.content-footnote');
       if(old)old.textContent='公開投稿をInstagramの公式埋め込みで表示しています。表示できない場合は「Instagramで見る」から開いてください。';
       // Instagram's own embed script is intentionally activated only inside the SNS route.
-      if(window.matchMedia('(min-width:360px)').matches){
+      // Native Instagram embeds require at least 326px. On smaller cards,
+      // use the official post link instead of squeezing the portrait iframe.
+      const availableWidth=Math.min(...[...grid.querySelectorAll('.instagram-reel-embed')].map(el=>el.getBoundingClientRect().width));
+      if(availableWidth>=326){
         if(window.instgrm?.Embeds?.process){
           window.instgrm.Embeds.process();
         }else{
