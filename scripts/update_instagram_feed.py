@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Refresh the public Instagram reel snapshot from the account owner's official API.
+"""Refresh the public Instagram post snapshot from the account owner's official API.
 
 Requires a private GitHub Actions secret INSTAGRAM_ACCESS_TOKEN with
 instagram_business_basic access. Never write tokens or expiring media URLs
@@ -30,12 +30,12 @@ def get_json(path, query, token):
         return json.load(response)
 
 
-def reel_url(value):
+def instagram_post_url(value):
     if not isinstance(value, str):
         return False
     parts = urllib.parse.urlparse(value)
     return (parts.scheme == "https" and parts.netloc == "www.instagram.com"
-            and re.fullmatch(r"/reel/[A-Za-z0-9_-]+/?", parts.path) is not None)
+            and re.fullmatch(r"/(?:reel|p)/[A-Za-z0-9_-]+/?", parts.path) is not None)
 
 
 def title_from_caption(caption):
@@ -49,7 +49,7 @@ def normalize_rows(rows, old):
     for row in rows:
         url = row.get("permalink")
         if not reel_url(url):
-            continue  # This first iteration deliberately displays Reels only.
+            continue  # This first iteration deliberately displays posts only.
         try:
             stamp = datetime.fromisoformat(row["timestamp"].replace("Z", "+00:00"))
             if stamp.tzinfo is None:
@@ -64,7 +64,7 @@ def normalize_rows(rows, old):
             excerpt = content[:120].rstrip()
         found.append((stamp, {
             "published_on": stamp.astimezone(ZoneInfo('Asia/Tokyo')).date().isoformat(),
-            "type": "reel", "title": title, "summary": excerpt, "url": url,
+            "type": "reel" if "/reel/" in url else "post", "title": title, "summary": excerpt, "url": url,
         }))
     found.sort(key=lambda item: item[0], reverse=True)
     return [row for _, row in found[:3]]
@@ -89,7 +89,7 @@ def main():
         old = json.loads(FEED.read_text(encoding="utf-8"))
         updates = normalize_rows(data["data"], old)
         if not updates:
-            print("No eligible public Reels were returned; keeping existing snapshot.")
+            print("No eligible public posts were returned; keeping existing snapshot.")
             return 0
         if old.get("items") == updates and old.get("auto_updated"):
             print("Instagram reel selection unchanged; no commit needed.")
@@ -102,7 +102,7 @@ def main():
             "items": updates,
         }
         FEED.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        print("Updated Instagram snapshot with", len(updates), "recent Reels.")
+        print("Updated Instagram snapshot with", len(updates), "recent posts.")
         return 0
     except Exception:
         print("Instagram update failed; keeping the previous verified snapshot.", file=sys.stderr)
