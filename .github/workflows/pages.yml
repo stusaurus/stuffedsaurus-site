@@ -370,6 +370,23 @@ jobs:
           grep -q 'v520.js' public/index.html
           python3 -m json.tool public/instagram-recent.json >/dev/null
 
+      - name: Version Instagram stylesheet after V5.22 aspect ratio fix
+        if: steps.bundle.outputs.present == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('public/index.html')
+          html=p.read_text(encoding='utf-8')
+          original='href="v520.css"'
+          assert html.count(original)==1, 'Expected V5.20 Instagram stylesheet missing'
+          html=html.replace(original,'href="v520.css?v522"',1)
+          p.write_text(html,encoding='utf-8')
+          PY
+          test -f public/v520.css
+          grep -q 'v520.css?v522' public/index.html
+
       - name: Configure GitHub Pages
         if: steps.bundle.outputs.present == 'true'
         uses: actions/configure-pages@v5
