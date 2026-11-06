@@ -1,0 +1,43 @@
+name: Refresh Instagram recent reels
+on:
+  schedule:
+    - cron: '21 0 * * *' # 09:21 Japan time
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: instagram-recent-feed
+  cancel-in-progress: false
+jobs:
+  update:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch owned public Reels from official Instagram API
+        env:
+          INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
+        run: python3 scripts/update_instagram_feed.py
+      - name: Validate and commit only when latest posts changed
+        id: changes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m json.tool preview/instagram-recent.json >/dev/null
+          if git diff --quiet -- preview/instagram-recent.json; then
+            echo "Recent Instagram post list unchanged."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add preview/instagram-recent.json
+          git commit -m "Update verified Instagram recent reel list"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+      - name: Rebuild GitHub Pages after data update
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run pages.yml --ref main

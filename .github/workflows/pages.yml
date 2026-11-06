@@ -20,6 +20,9 @@ on:
       - 'preview/v518.js'
       - 'preview/v519.css'
       - 'preview/v519.js'
+      - 'preview/v520.css'
+      - 'preview/v520.js'
+      - 'preview/instagram-recent.json'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -332,6 +335,40 @@ jobs:
           cp public/preview-v519/v519.js public/v519.js
           grep -q 'v519.css' public/index.html
           grep -q 'v519.js' public/index.html
+
+      - name: Build recent Instagram reel gallery (keep V5.19 rollback)
+        if: steps.bundle.outputs.present == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p public/preview-v520
+          cp -a public/assets public/preview-v520/assets
+          cp public/index.html public/preview-v520/index.html
+          for layer in 512 513 514 516 517 518 519; do
+            cp "public/v${layer}.css" "public/preview-v520/v${layer}.css"
+            cp "public/v${layer}.js" "public/preview-v520/v${layer}.js"
+          done
+          cp public/v515.css public/preview-v520/v515.css
+          cp preview/v520.css public/preview-v520/v520.css
+          cp preview/v520.js public/preview-v520/v520.js
+          cp preview/instagram-recent.json public/preview-v520/instagram-recent.json
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('public/preview-v520/index.html')
+          html=p.read_text(encoding='utf-8')
+          assert 'v519.js' in html
+          html=html.replace('</head>','<link rel="stylesheet" href="v520.css"/>\n</head>',1)
+          html=html.replace('</body>','<script src="v520.js"></script>\n</body>',1)
+          p.write_text(html,encoding='utf-8')
+          PY
+          test -f public/preview-v519/index.html
+          cp public/preview-v520/index.html public/index.html
+          cp public/preview-v520/v520.css public/v520.css
+          cp public/preview-v520/v520.js public/v520.js
+          cp public/preview-v520/instagram-recent.json public/instagram-recent.json
+          grep -q 'v520.css' public/index.html
+          grep -q 'v520.js' public/index.html
+          python3 -m json.tool public/instagram-recent.json >/dev/null
 
       - name: Configure GitHub Pages
         if: steps.bundle.outputs.present == 'true'
