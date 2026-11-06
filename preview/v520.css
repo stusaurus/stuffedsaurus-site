@@ -238,9 +238,4 @@
   height:70px;
   font-size:27px;
 }
-/* Do not assign an aspect ratio or forced height to the Instagram iframe.
-   The embed SDK controls its responsive portrait rendition. */
-#view-sns .instagram-reel-embed iframe.instagram-media,
-#view-sns .instagram-reel-embed iframe{
-  aspect-ratio:auto;
-}
+/* Instagram controls its own iframe width, height and aspect ratio. */
