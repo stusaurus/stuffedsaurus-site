@@ -4,6 +4,7 @@ on:
     paths:
       - 'preview/**'
       - 'qa/**'
+      - 'scripts/update_instagram_feed.py'
       - 'site.zip'
       - '.github/workflows/pages.yml'
       - '.github/workflows/v520-qa.yml'
@@ -70,6 +71,8 @@ jobs:
           assert all(row['url'].startswith('https://www.instagram.com/reel/') for row in x['items'])
           assert [r['published_on'] for r in x['items']]==sorted((r['published_on'] for r in x['items']),reverse=True)
           PY
+      - name: Unit-test source normalization
+        run: python3 -m unittest discover -s qa -p 'test_instagram_sync.py' -v
       - name: Browser-test recent reel gallery
         run: |
           python3 -m http.server 8765 -d public >/tmp/stuffedsaurus-http.log 2>&1 &
