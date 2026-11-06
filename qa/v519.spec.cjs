@@ -34,8 +34,16 @@ for(const width of sizes){
    const speaking=await links.evaluateAll(items=>items.filter(item=>item.classList.contains('friend-speaking')).length);
    expect(speaking).toBe(1);
   }
-  if(width===390||width===1440)
+  if(width===390||width===1440){
+   const skipState=await page.evaluate(()=>{
+    const a=[...document.querySelectorAll('a')].find(el=>el.textContent?.includes('本文へスキップ'));
+    if(!a)return null;
+    const s=getComputedStyle(a),b=a.getBoundingClientRect(),p=document.activeElement;
+    return {selector:a.className,position:s.position,display:s.display,visibility:s.visibility,opacity:s.opacity,top:s.top,left:s.left,rect:{x:b.x,y:b.y,width:b.width,height:b.height},focused:p===a,activeTag:p?.tagName,activeClass:p?.className,scrollY};
+   });
+   console.log('SKIP_LINK_DIAGNOSTIC',width,JSON.stringify(skipState));
    await page.screenshot({path:'test-results/v519-character-talk-'+width+'.png',fullPage:true});
+  }
   const state=await page.evaluate(()=>({
    overflow:document.documentElement.scrollWidth-innerWidth,
    broken:[...document.images].filter(img=>img.getClientRects().length&&img.complete&&!img.naturalWidth).map(img=>img.src)
