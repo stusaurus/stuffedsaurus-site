@@ -239,3 +239,190 @@
   font-size:27px;
 }
 /* Instagram controls its own iframe width, height and aspect ratio. */
+
+
+/* V5.23 — the official Instagram embed was letterboxing square previews
+   on the user's iPhone. These are our own fixed-ratio teaser cards.
+   Every media item remains a genuine external Instagram permalink. */
+#view-sns .instagram-recent-v523{
+  max-width:950px;
+}
+#view-sns .instagram-recent-v523 .instagram-recent-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:23px;
+}
+#view-sns .instagram-recent-v523 .instagram-recent-card{
+  width:100%;
+  padding:14px;
+  background:#fffaf0;
+  box-sizing:border-box;
+}
+#view-sns .instagram-recent-v523 .instagram-recent-caption{
+  min-height:120px;
+}
+#view-sns .instagram-recent-v523 .instagram-cover-link{
+  display:block;
+  width:100%;
+  text-decoration:none;
+  color:#5b4737;
+  border-radius:19px;
+  -webkit-tap-highlight-color:transparent;
+}
+#view-sns .instagram-recent-v523 .instagram-cover-art{
+  box-sizing:border-box;
+  aspect-ratio:9 / 16;
+  width:100%;
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:20px 17px 22px;
+  border:2px solid #dfbf92;
+  border-radius:19px;
+  isolation:isolate;
+  box-shadow:inset 0 0 0 4px rgba(255,250,233,.43);
+  background:linear-gradient(160deg,#ffefcf,#e5cba5);
+  transition:transform .16s ease,box-shadow .16s ease;
+}
+#view-sns .instagram-recent-v523 .instagram-cover-art::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  background:
+    radial-gradient(circle at 10% 9%,rgba(255,246,199,.85) 0 5%,transparent 6%),
+    radial-gradient(circle at 90% 15%,rgba(255,238,196,.78) 0 4%,transparent 5%),
+    radial-gradient(ellipse at 15% 60%,rgba(177,205,154,.31),transparent 38%),
+    radial-gradient(ellipse at 92% 86%,rgba(230,169,102,.27),transparent 43%);
+}
+#view-sns .instagram-recent-v523 .theme-autumn{
+  background:linear-gradient(155deg,#f9e4b9,#e4b78b 75%,#f3cf9e);
+}
+#view-sns .instagram-recent-v523 .theme-workshop{
+  background:linear-gradient(155deg,#f8e8ce,#d8e4d2 75%,#efddba);
+}
+#view-sns .instagram-recent-v523 .theme-forest{
+  background:linear-gradient(155deg,#ecf0da,#c8d7b5 75%,#e8dabb);
+}
+#view-sns .instagram-recent-v523 .instagram-cover-tag{
+  z-index:1;
+  font-size:clamp(13px,1.4vw,17px);
+  font-weight:850;
+  letter-spacing:.08em;
+  color:#74593c;
+  padding:8px 13px;
+  border:1px solid rgba(159,114,62,.24);
+  border-radius:999px;
+  background:rgba(255,252,239,.78);
+  text-align:center;
+}
+#view-sns .instagram-recent-v523 .instagram-cover-picture{
+  position:relative;
+  display:flex;
+  flex:1 1 auto;
+  width:100%;
+  min-height:0;
+  align-items:center;
+  justify-content:center;
+}
+#view-sns .instagram-recent-v523 .instagram-cover-character{
+  display:block;
+  width:100%;
+  max-width:330px;
+  height:auto;
+  max-height:100%;
+  object-fit:contain;
+  border:3px solid rgba(255,249,232,.92);
+  border-radius:20px;
+  box-shadow:0 9px 22px rgba(96,69,33,.14);
+}
+#view-sns .instagram-recent-v523 .instagram-cover-title{
+  z-index:1;
+  display:block;
+  max-width:100%;
+  padding:8px 13px;
+  color:#60452e;
+  font-size:clamp(18px,2vw,24px);
+  font-weight:900;
+  line-height:1.45;
+  text-align:center;
+  overflow-wrap:anywhere;
+  border-radius:15px;
+  background:rgba(255,253,242,.88);
+}
+#view-sns .instagram-recent-v523 .instagram-cover-note{
+  font-size:11px;
+  letter-spacing:.05em;
+  color:#7c6b55;
+  text-align:center;
+}
+#view-sns .instagram-recent-v523 .instagram-cover-play{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:64px;
+  height:64px;
+  display:grid;
+  place-items:center;
+  padding-left:4px;
+  border-radius:50%;
+  border:2px solid rgba(255,255,245,.92);
+  background:rgba(80,57,43,.76);
+  color:#fff;
+  font-size:22px;
+  line-height:1;
+  z-index:2;
+  box-shadow:0 5px 19px rgba(45,37,29,.25);
+}
+#view-sns .instagram-recent-v523 .instagram-cover-link:focus-visible{
+  outline:4px solid #638b60;
+  outline-offset:5px;
+}
+@media(hover:hover) and (pointer:fine){
+  #view-sns .instagram-recent-v523 .instagram-cover-link:hover .instagram-cover-art{
+    transform:translateY(-3px);
+    box-shadow:inset 0 0 0 4px rgba(255,250,233,.43),0 12px 19px rgba(84,64,42,.12);
+  }
+}
+#view-sns .instagram-recent-v523 .instagram-cover-link:active .instagram-cover-art{
+  transform:scale(.988);
+}
+#view-sns .instagram-recent-v523 .instagram-recent-card:last-child:nth-child(odd){
+  width:min(100%,460px);
+  grid-column:1/-1;
+  justify-self:center;
+}
+@media(max-width:900px){
+  #view-sns .instagram-recent-v523{
+    max-width:520px;
+  }
+  #view-sns .instagram-recent-v523 .instagram-recent-grid{
+    grid-template-columns:minmax(0,1fr);
+    gap:17px;
+  }
+  #view-sns .instagram-recent-v523 .instagram-recent-card:last-child:nth-child(odd){
+    width:100%;
+    grid-column:auto;
+  }
+  #view-sns .instagram-recent-v523 .instagram-recent-caption{
+    min-height:0;
+  }
+  #view-sns .instagram-recent-v523 .instagram-cover-title{
+    font-size:clamp(17px,4.6vw,23px);
+  }
+}
+@media(max-width:350px){
+  #view-sns .instagram-recent-v523 .instagram-recent-card{padding:8px}
+  #view-sns .instagram-recent-v523 .instagram-cover-art{padding:12px 8px 14px}
+  #view-sns .instagram-recent-v523 .instagram-cover-tag{font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){
+  #view-sns .instagram-recent-v523 .instagram-cover-art{
+    transition:none!important;
+    transform:none!important;
+  }
+}

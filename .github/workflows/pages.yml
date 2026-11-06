@@ -387,6 +387,25 @@ jobs:
           test -f public/v520.css
           grep -q 'v520.css?v522' public/index.html
 
+      - name: Publish V5.23 full-ratio Instagram previews without stale assets
+        if: steps.bundle.outputs.present == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('public/index.html')
+          html=p.read_text(encoding='utf-8')
+          assert 'href="v520.css?v522"' in html
+          assert 'src="v520.js"' in html
+          html=html.replace('href="v520.css?v522"','href="v520.css?v523"',1)
+          html=html.replace('src="v520.js"','src="v520.js?v523"',1)
+          p.write_text(html,encoding='utf-8')
+          PY
+          test -f public/v520.js
+          test -f public/v520.css
+          grep -q 'v520.js?v523' public/index.html
+
       - name: Configure GitHub Pages
         if: steps.bundle.outputs.present == 'true'
         uses: actions/configure-pages@v5
