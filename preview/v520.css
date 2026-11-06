@@ -119,3 +119,36 @@
 @media(prefers-reduced-motion:reduce){
   #view-sns .instagram-recent *{animation:none!important;transition:none!important}
 }
+
+/* An inviting, clearly labeled link remains if Instagram blocks embeds. */
+#view-sns .instagram-embed-fallback{
+  flex-direction:column;
+  gap:10px;
+  min-height:185px;
+  border:1px dashed #dfbe96;
+  border-radius:13px;
+  background:
+    radial-gradient(circle at 15% 12%,rgba(162,197,151,.32),transparent 27%),
+    radial-gradient(circle at 85% 83%,rgba(239,202,139,.38),transparent 30%),
+    linear-gradient(155deg,#fff9ec,#f4e6ce);
+  text-decoration:none;
+  line-height:1.5;
+}
+#view-sns .instagram-embed-fallback::before{
+  content:'▶';
+  display:grid;
+  place-items:center;
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  border:2px solid #ca9e68;
+  background:#fff8e7;
+  box-shadow:0 4px 0 #dfc49b;
+  font-size:22px;
+  color:#b37a57;
+  padding-left:3px;
+}
+#view-sns .instagram-embed-fallback:hover{
+  color:#41654d;
+  border-color:#9cac7b;
+}
