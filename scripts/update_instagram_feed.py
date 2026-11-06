@@ -96,7 +96,7 @@ def main():
             return 0
         payload = {
             "account": ACCOUNT,
-            "checked_at": datetime.now(timezone.utc).date().isoformat(),
+            "checked_at": datetime.now(ZoneInfo("Asia/Tokyo")).date().isoformat(),
             "source": "Instagram API with Instagram Login",
             "auto_updated": True,
             "items": updates,
