@@ -8,6 +8,8 @@ for(const width of [320,360,390,430,768,770,1024,1440]){
   page.on('pageerror',error=>errors.push(error.message));
   await page.goto(url,{waitUntil:'networkidle'});
   await expect(page.locator('.site-nav a.illustrated-nav')).toHaveCount(9);
+  const order=await page.locator('.site-nav a.illustrated-nav').evaluateAll(links=>links.map(a=>a.dataset.worldIcon));
+  expect(order).toEqual(['home','manga','news','catalog','sns','games','books','goods','friends']);
   await expect(page.locator('.site-nav a[data-world-icon="games"] .world-nav-text')).toHaveText('ゲーム');
   await expect(page.locator('.site-nav a[data-world-icon="goods"] .world-nav-text')).toHaveText('グッズ');
   await expect(page.locator('.site-nav svg.nav-icon-svg')).toHaveCount(9);
@@ -98,6 +100,8 @@ test('V5.17 promoted root homepage displays interactive illustrated menu',async(
   await expect(page.locator('link[href="v517.css"]')).toHaveCount(1);
   await expect(page.locator('script[src="v517.js"]')).toHaveCount(1);
   await expect(page.locator('.site-nav a.illustrated-nav')).toHaveCount(9);
+  const order=await page.locator('.site-nav a.illustrated-nav').evaluateAll(links=>links.map(a=>a.dataset.worldIcon));
+  expect(order).toEqual(['home','manga','news','catalog','sns','games','books','goods','friends']);
   await expect(page.locator('.site-nav svg.nav-icon-svg')).toHaveCount(9);
   if(width===390){
    const toggle=page.locator('#menu-toggle');
