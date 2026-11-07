@@ -53,6 +53,8 @@ jobs:
               html=html.replace('</head>',f'<link rel="stylesheet" href="v{layer}.css"/>\n</head>',1)
               html=html.replace('</body>',f'<script src="v{layer}.js"></script>\n</body>',1)
           shutil.copy2(Path('preview/instagram-recent.json'),target/'instagram-recent.json')
+          shutil.copytree(Path('preview/instagram-covers'),target/'instagram-covers')
+          shutil.copytree(Path('preview/instagram-covers'),root/'instagram-covers')
           (target/'index.html').write_text(html,encoding='utf-8')
           shutil.copy2(target/'index.html',root/'index.html')
           for src in target.glob('v5*'):
@@ -70,6 +72,11 @@ jobs:
           assert len(x['items'])==3
           assert all(row['url'].startswith('https://www.instagram.com/reel/') for row in x['items'])
           assert [r['published_on'] for r in x['items']]==sorted((r['published_on'] for r in x['items']),reverse=True)
+          for p in x['items']:
+              cover=Path('preview')/p['cover_path']
+              assert cover.is_file() and cover.stat().st_size>20000
+              assert p['cover_path'].endswith(p['url'].split('/')[-2]+'.webp')
+              assert p['cover_source']=='connected @stuffed_saurus Reel thumbnail'
           PY
       - name: Unit-test source normalization
         run: python3 -m unittest discover -s qa -p 'test_instagram_sync.py' -v
