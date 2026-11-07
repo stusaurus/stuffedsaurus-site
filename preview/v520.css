@@ -426,3 +426,85 @@
     transform:none!important;
   }
 }
+
+/* V5.24 — the FULL authentic 9:16 Reel cover; never swap in generic art.
+   Source files are verified first-party WebPs from @stuffed_saurus reels. */
+#view-sns .instagram-recent-v524 .instagram-cover-art{
+  display:block;
+  position:relative;
+  box-sizing:border-box;
+  aspect-ratio:9 / 16;
+  width:100%;
+  padding:0;
+  overflow:hidden;
+  border:0;
+  border-radius:17px;
+  background:#ede5db;
+  box-shadow:0 5px 18px rgba(64,44,27,.10);
+}
+#view-sns .instagram-recent-v524 .instagram-cover-art::before{
+  content:none;
+}
+#view-sns .instagram-recent-v524 .instagram-reel-cover-image{
+  display:block;
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  max-width:none;
+  max-height:none;
+  object-fit:cover;
+  object-position:center center;
+  border:0;
+  border-radius:17px;
+  background:transparent;
+  box-shadow:none;
+}
+#view-sns .instagram-recent-v524 .instagram-cover-play{
+  width:58px;
+  height:58px;
+  border-width:2px;
+  background:rgba(36,29,25,.69);
+  color:white;
+  font-size:23px;
+  text-shadow:0 1px 2px rgba(0,0,0,.25);
+}
+#view-sns .instagram-recent-v524 .instagram-cover-open-label{
+  display:block;
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:2;
+  padding:28px 10px 13px;
+  background:linear-gradient(transparent,rgba(34,25,19,.80));
+  color:#fff;
+  text-align:center;
+  font-size:14px;
+  font-weight:800;
+  letter-spacing:.04em;
+  pointer-events:none;
+}
+#view-sns .instagram-recent-v524 .instagram-cover-missing{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:16px;
+  background:linear-gradient(145deg,#eee7da,#d8e4d8);
+}
+#view-sns .instagram-recent-v524 .instagram-cover-missing-text{
+  max-width:80%;
+  text-align:center;
+  font-size:18px;
+  font-weight:800;
+  color:#584735;
+}
+#view-sns .instagram-recent-v524 .instagram-cover-link:focus-visible{
+  outline:4px solid #4e8b6c;
+  outline-offset:5px;
+}
+@media(prefers-reduced-motion:reduce){
+  #view-sns .instagram-recent-v524 .instagram-cover-art{
+    transition:none!important;
+  }
+}

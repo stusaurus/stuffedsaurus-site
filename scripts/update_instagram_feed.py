@@ -62,10 +62,19 @@ def normalize_rows(rows, old):
         if not excerpt:
             content = re.sub(r"\s+", " ", (row.get("caption") or "").split("#", 1)[0]).strip()
             excerpt = content[:120].rstrip()
-        found.append((stamp, {
+        new_post = {
             "published_on": stamp.astimezone(ZoneInfo('Asia/Tokyo')).date().isoformat(),
-            "type": "reel" if "/reel/" in url else "post", "title": title, "summary": excerpt, "url": url,
-        }))
+            "type": "reel" if "/reel/" in url else "post",
+            "title": title, "summary": excerpt, "url": url,
+        }
+        # Preserve an existing *verified* permanent thumbnail for this exact post;
+        # never display a thumbnail from a different Reel after an API refresh.
+        code = url.rstrip("/").split("/")[-1]
+        expected = "instagram-covers/" + code + ".webp"
+        if old_row.get("cover_path") == expected and (FEED.parent / expected).is_file():
+            new_post["cover_path"] = expected
+            new_post["cover_source"] = old_row.get("cover_source", "connected @stuffed_saurus Reel thumbnail")
+        found.append((stamp, new_post))
     found.sort(key=lambda item: item[0], reverse=True)
     return [row for _, row in found[:3]]
 

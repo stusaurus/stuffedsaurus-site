@@ -23,6 +23,7 @@ on:
       - 'preview/v520.css'
       - 'preview/v520.js'
       - 'preview/instagram-recent.json'
+      - 'preview/instagram-covers/**'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -405,6 +406,35 @@ jobs:
           test -f public/v520.js
           test -f public/v520.css
           grep -q 'v520.js?v523' public/index.html
+
+      - name: Publish V5.24 authentic Reel covers and update cached scripts
+        if: steps.bundle.outputs.present == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -d preview/instagram-covers
+          mkdir -p public/instagram-covers public/preview-v520/instagram-covers
+          cp preview/instagram-covers/*.webp public/instagram-covers/
+          cp preview/instagram-covers/*.webp public/preview-v520/instagram-covers/
+          cp preview/instagram-recent.json public/instagram-recent.json
+          cp preview/instagram-recent.json public/preview-v520/instagram-recent.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          data=json.loads(Path('public/instagram-recent.json').read_text())
+          for post in data['items']:
+              p=Path('public')/post['cover_path']
+              assert p.exists() and p.stat().st_size>20000, f'missing verified Reel photo: {p}'
+              assert post.get('cover_source')=='connected @stuffed_saurus Reel thumbnail'
+          p=Path('public/index.html')
+          html=p.read_text(encoding='utf-8')
+          assert 'v520.js?v523' in html and 'v520.css?v523' in html
+          html=html.replace('v520.js?v523','v520.js?v524',1)
+          html=html.replace('v520.css?v523','v520.css?v524',1)
+          p.write_text(html,encoding='utf-8')
+          PY
+          grep -q 'v520.js?v524' public/index.html
+          grep -q 'v520.css?v524' public/index.html
 
       - name: Configure GitHub Pages
         if: steps.bundle.outputs.present == 'true'
