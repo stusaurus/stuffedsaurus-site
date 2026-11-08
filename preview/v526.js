@@ -120,7 +120,7 @@
   }
 
   const disclaimer=document.querySelector('.site-footer .footer-disclaimer');
-  if(disclaimer&&/V5\.10|本番未公開/.test(disclaimer.textContent)){
+  if(disclaimer){
     disclaimer.textContent='© StuffedSaurus';
   }
 })();
