@@ -1,0 +1,64 @@
+name: V5.25 character-first homepage browser QA
+on:
+  pull_request:
+    paths:
+      - 'preview/v525.*'
+      - 'preview/instagram-recent.json'
+      - 'preview/instagram-covers/**'
+      - 'qa/v525.spec.cjs'
+      - 'site.zip'
+      - '.github/workflows/pages.yml'
+      - '.github/workflows/v525-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  homepage-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save @playwright/test@1.58.2
+          npx playwright install --with-deps chromium
+      - name: Build V5.25 candidate from approved source
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          from shutil import copy2,copytree
+          out=Path('public')
+          out.mkdir(exist_ok=True)
+          with ZipFile('site.zip') as archive: archive.extractall(out)
+          html=(out/'index.html').read_text(encoding='utf-8')
+          for version in ('512','513','514','515','516','517','518','519','520','525'):
+              for ext in ('css','js'):
+                  path=Path('preview')/f'v{version}.{ext}'
+                  if not path.exists(): continue
+                  copy2(path,out/path.name)
+                  anchor='</head>' if ext=='css' else '</body>'
+                  snippet=(f'<link rel="stylesheet" href="{path.name}"/>' if ext=='css'
+                           else f'<script src="{path.name}"></script>')
+                  assert anchor in html
+                  html=html.replace(anchor,snippet+'\n'+anchor,1)
+          copy2(Path('preview/instagram-recent.json'),out/'instagram-recent.json')
+          copytree(Path('preview/instagram-covers'),out/'instagram-covers')
+          (out/'index.html').write_text(html,encoding='utf-8')
+          assert 'v525.js' in html and 'v525.css' in html
+          PY
+      - name: Check V5.25 JavaScript syntax
+        run: node --check preview/v525.js
+      - name: Browser-test 8 viewports and alternate states
+        run: |
+          python3 -m http.server 8765 -d public >/tmp/stuffedsaurus-v525-server.log 2>&1 &
+          npx playwright test qa/v525.spec.cjs --reporter=line
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v525-home-visual-check
+          path: test-results/
+          if-no-files-found: ignore
