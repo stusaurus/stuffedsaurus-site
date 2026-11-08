@@ -1,0 +1,105 @@
+/* V5.25: character-first homepage; preserve existing approved illustrations. */
+#view-home.home-v525 .home-welcome{
+ max-width:1060px;margin:24px auto 22px;padding:21px 28px 23px;
+ border:1.5px solid #dfc49d;border-radius:23px 21px 24px 20px;
+ background:radial-gradient(circle at 5% 10%,#e7f3e1 0%,transparent 43%),radial-gradient(circle at 95% 88%,#fff0cc 0%,transparent 40%),#fffcf1;
+ box-shadow:0 5px 16px rgba(94,67,39,.06);text-align:center;
+}
+#view-home.home-v525 .home-welcome-eyebrow,
+#view-home.home-v525 .home-reels-eyebrow{font-size:12px;font-weight:750;letter-spacing:.07em;color:#678267;margin:0 0 3px}
+#view-home.home-v525 .home-welcome h2{margin:0;color:#5c4730;font-size:clamp(21px,3vw,29px);line-height:1.5;letter-spacing:.03em}
+#view-home.home-v525 .home-welcome-description{margin:7px auto 15px;max-width:660px;color:#69563f;font-size:14px;line-height:1.85}
+#view-home.home-v525 .home-welcome-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:10px}
+#view-home.home-v525 .home-welcome-actions a{
+ min-height:44px;display:inline-flex;align-items:center;justify-content:center;
+ padding:8px 19px;border-radius:999px;font-size:14px;font-weight:800;text-decoration:none;position:relative;z-index:1;
+}
+#view-home.home-v525 .home-welcome-primary{background:#f7db85;border:1.5px solid #cb9a4e;color:#583c25}
+#view-home.home-v525 .home-welcome-secondary{background:#fffaf0;border:1.5px solid #93b29c;color:#3e6956}
+#view-home.home-v525 .home-sections{
+ max-width:1060px;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+ gap:25px;padding-top:19px;padding-bottom:45px;
+}
+#view-home.home-v525 .home-sections #home-friends{grid-column:1 / -1;grid-row:auto;order:0;margin:0}
+#view-home.home-v525 #home-friends .friend-grid{max-width:800px;margin:12px auto 0;gap:clamp(10px,2vw,24px)}
+#view-home.home-v525 #home-friends .friend img{height:clamp(135px,17vw,205px);object-fit:contain;background:#fbefd6}
+#view-home.home-v525 #home-friends .friend b{font-size:14px}
+#view-home.home-v525 #home-friends .friend-chat{margin-top:15px}
+#view-home.home-v525 .home-reels{
+ grid-column:1 / -1;grid-row:auto;order:1;min-width:0;
+ padding:24px clamp(12px,3vw,30px) 21px;
+ border:1.5px solid #dfc8a4;border-radius:21px;
+ background:linear-gradient(150deg,#fffdf5,#f4f0e4);
+ box-shadow:0 5px 17px rgba(94,67,39,.06);
+}
+#view-home.home-v525 .home-reels-heading{text-align:center;margin:0 auto 16px}
+#view-home.home-v525 .home-reels-heading h2{margin:2px 0 4px;color:#5e4836;font-size:clamp(19px,2.5vw,25px)}
+#view-home.home-v525 .home-reels-description{margin:0;color:#74614b;font-size:13px;line-height:1.75}
+#view-home.home-v525 .home-reels-grid{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+ gap:clamp(9px,2vw,20px);max-width:780px;margin:0 auto;
+}
+#view-home.home-v525 .home-reels-card{
+ min-width:0;display:block;text-decoration:none;color:#604936;
+ background:#fff9ed;border:1px solid #e5cfae;
+ border-radius:13px;overflow:hidden;box-shadow:0 3px 9px rgba(72,55,38,.06);
+ transition:transform .18s ease;
+}
+#view-home.home-v525 .home-reels-card:hover{transform:translateY(-3px)}
+#view-home.home-v525 .home-reels-picture{
+ aspect-ratio:9 / 16;display:block;position:relative;overflow:hidden;
+ background:linear-gradient(145deg,#f1e2c8,#e6efdb);
+}
+#view-home.home-v525 .home-reels-image{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+#view-home.home-v525 .home-reels-play{
+ position:absolute;bottom:10px;right:10px;display:grid;place-items:center;
+ width:35px;height:35px;border-radius:50%;background:rgba(255,250,239,.9);
+ color:#725133;font-size:14px;box-shadow:0 2px 5px rgba(30,20,10,.15);
+}
+#view-home.home-v525 .home-reels-copy{display:flex;flex-direction:column;gap:2px;padding:9px 10px 12px}
+#view-home.home-v525 .home-reels-copy strong{
+ display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
+ overflow:hidden;font-size:13px;line-height:1.55;min-height:40px;
+}
+#view-home.home-v525 .home-reels-copy small{font-size:11px;color:#8a755c}
+#view-home.home-v525 .home-reels-footer{text-align:center;margin-top:16px}
+#view-home.home-v525 .home-reels-more,
+#view-home.home-v525 .home-reels-unavailable{
+ color:#3d7258;font-weight:800;font-size:14px;text-underline-offset:.25em;
+}
+#view-home.home-v525 .home-reels-unavailable{grid-column:1 / -1;text-align:center;min-height:60px}
+#view-home.home-v525 .home-reels-cover-missing{display:grid;place-items:center}
+#view-home.home-v525 .home-reels-fallback{color:#62513e;font-size:13px;font-weight:800;text-align:center;padding:14px}
+#view-home.home-v525 .home-sections #home-manga{grid-column:1;grid-row:auto;order:2;margin:0}
+#view-home.home-v525 .home-sections #home-updates{grid-column:2;grid-row:auto;order:3;margin:0}
+#view-home.home-v525 .home-sections #home-manga,
+#view-home.home-v525 .home-sections #home-updates{align-self:stretch}
+@media(max-width:769px){
+ #view-home.home-v525 .home-welcome{
+   width:min(640px,calc(100% - 30px));margin:16px auto 10px;padding:18px 14px 19px;
+ }
+ #view-home.home-v525 .home-welcome-description{font-size:13px}
+ #view-home.home-v525 .home-welcome-actions{gap:8px}
+ #view-home.home-v525 .home-welcome-actions a{font-size:13px;padding:7px 13px}
+ #view-home.home-v525 .home-sections{
+   width:min(640px,calc(100% - 30px));
+   grid-template-columns:minmax(0,1fr);gap:31px;padding-top:27px;
+ }
+ #view-home.home-v525 .home-sections #home-friends,
+ #view-home.home-v525 .home-sections #home-manga,
+ #view-home.home-v525 .home-sections #home-updates,
+ #view-home.home-v525 .home-sections .home-reels{grid-column:1;grid-row:auto}
+ #view-home.home-v525 #home-friends .friend-grid{gap:8px}
+ #view-home.home-v525 #home-friends .friend img{height:clamp(100px,29vw,175px)}
+ #view-home.home-v525 #home-friends .friend b{font-size:12px}
+ #view-home.home-v525 .home-reels{padding:20px 10px 17px}
+ #view-home.home-v525 .home-reels-grid{gap:8px}
+ #view-home.home-v525 .home-reels-copy{padding:7px 6px 9px}
+ #view-home.home-v525 .home-reels-copy strong{font-size:11px;min-height:35px}
+ #view-home.home-v525 .home-reels-copy small{font-size:10px}
+ #view-home.home-v525 .home-reels-play{width:29px;height:29px;bottom:7px;right:7px}
+}
+@media(prefers-reduced-motion:reduce){
+ #view-home.home-v525 .home-reels-card{transition:none}
+ #view-home.home-v525 .home-reels-card:hover{transform:none}
+}
