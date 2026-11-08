@@ -7,7 +7,7 @@
 }
 #view-home.home-v525 .home-welcome-eyebrow,
 #view-home.home-v525 .home-reels-eyebrow{font-size:12px;font-weight:750;letter-spacing:.07em;color:#678267;margin:0 0 3px}
-#view-home.home-v525 .home-welcome h2{margin:0;color:#5c4730;font-size:clamp(21px,3vw,29px);line-height:1.5;letter-spacing:.03em}
+#view-home.home-v525 .home-welcome h2{margin:0;color:#5c4730;font-size:clamp(21px,3vw,29px);line-height:1.5;letter-spacing:.03em;text-wrap:balance}
 #view-home.home-v525 .home-welcome-description{margin:7px auto 15px;max-width:660px;color:#69563f;font-size:14px;line-height:1.85}
 #view-home.home-v525 .home-welcome-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:10px}
 #view-home.home-v525 .home-welcome-actions a{
