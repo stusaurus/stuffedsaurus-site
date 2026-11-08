@@ -24,6 +24,8 @@ on:
       - 'preview/v520.js'
       - 'preview/v525.css'
       - 'preview/v525.js'
+      - 'preview/v526.css'
+      - 'preview/v526.js'
       - 'preview/instagram-recent.json'
       - 'preview/instagram-covers/**'
       - '.github/workflows/pages.yml'
@@ -461,6 +463,26 @@ jobs:
           PY
           grep -q 'v525.js?v525' public/index.html
           grep -q 'v525.css?v525' public/index.html
+
+      - name: Publish V5.26 character discovery and remove obsolete preview footer
+        if: steps.bundle.outputs.present == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp preview/v526.css public/v526.css
+          cp preview/v526.js public/v526.js
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('public/index.html')
+          html=p.read_text(encoding='utf-8')
+          assert 'v525.js?v525' in html and 'v525.css?v525' in html
+          assert html.count('</head>')==1 and html.count('</body>')==1
+          html=html.replace('</head>','<link rel="stylesheet" href="v526.css?v526"/>\n</head>',1)
+          html=html.replace('</body>','<script src="v526.js?v526"></script>\n</body>',1)
+          p.write_text(html,encoding='utf-8')
+          PY
+          grep -q 'v526.js?v526' public/index.html
+          grep -q 'v526.css?v526' public/index.html
 
       - name: Configure GitHub Pages
         if: steps.bundle.outputs.present == 'true'
