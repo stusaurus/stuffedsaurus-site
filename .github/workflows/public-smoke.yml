@@ -8,30 +8,70 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/public-smoke.yml'
-      - '.github/workflows/pages.yml'
+  workflow_run:
+    workflows: ['Publish StuffedSaurus preview']
+    types: [completed]
 permissions:
   contents: read
 jobs:
   public-smoke:
+    # Do not check unreleased V5.29 from a pull request. Verify the live site
+    # only after a successful Pages publish or a main-branch smoke update.
+    if: >-
+      github.event_name != 'pull_request' &&
+      (github.event_name != 'workflow_run' ||
+       (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main'))
     runs-on: ubuntu-24.04
+    timeout-minutes: 8
     steps:
-      - name: Verify live homepage and assets
+      - name: Verify V5.29 live storybook reactions, dialogue and official art
         shell: bash
         run: |
           set -euo pipefail
           base='https://stusaurus.github.io/stuffedsaurus-site'
-          for attempt in 1 2 3 4 5; do
-            if curl --fail --location --silent --show-error --retry 2 "$base/" -o /tmp/home.html && grep -q 'v514.css' /tmp/home.html; then
+          ready=false
+          for attempt in 1 2 3 4 5 6 7 8; do
+            if curl --fail --location --silent --show-error --retry 2 "$base/?v529-smoke=$attempt" -o /tmp/home.html \
+              && grep -Fq 'v527.css?v527' /tmp/home.html \
+              && grep -Fq 'v527.js?v527' /tmp/home.html \
+              && grep -Fq 'v528.css?v528' /tmp/home.html \
+              && grep -Fq 'v528.js?v528' /tmp/home.html \
+              && grep -Fq 'v529.css?v529' /tmp/home.html \
+              && grep -Fq 'v529.js?v529' /tmp/home.html \
+              && grep -Fq 'v526.js?v526' /tmp/home.html; then
+              ready=true
               break
             fi
-            if [ "$attempt" -eq 5 ]; then
-              echo 'Live homepage did not include the approved V5.14 layer'
-              exit 1
-            fi
-            sleep 15
+            if [ "$attempt" -lt 8 ]; then sleep 15; fi
           done
-          for path in v512.css v512.js v513.css v513.js v514.css v514.js assets/hero-wide.webp assets/hero-mobile-v56.webp; do
+          if [ "$ready" != true ]; then
+            echo 'Live homepage is missing the V5.29 storybook reaction layers'
+            exit 1
+          fi
+          for path in v512.css v512.js v513.css v513.js v514.css v514.js v526.css v526.js v527.css v527.js v528.css v528.js v529.css v529.js reactions/tiranon/wave_both.webp reactions/tiranon/shy_giggle.webp reactions/tiranon/happy_run.webp reactions/tiranon/sitting_laugh.webp reactions/tiranon/hooray.webp assets/hero-wide.webp assets/hero-mobile-v56.webp; do
             echo "Checking $path"
             curl --fail --location --silent --show-error --retry 3 --output /dev/null "$base/$path"
           done
-          echo 'Published V5.14 homepage and essential assets responded successfully.'
+          curl --fail --location --silent --show-error "$base/v527.js" -o /tmp/v527.js
+          curl --fail --location --silent --show-error "$base/v527.css" -o /tmp/v527.css
+          grep -Fq 'v527-art-touch' /tmp/v527.js
+          grep -Fq 'v527-speech' /tmp/v527.js
+          grep -Fq 'prefers-reduced-motion:reduce' /tmp/v527.css
+          curl --fail --location --silent --show-error "$base/v528.js" -o /tmp/v528.js
+          curl --fail --location --silent --show-error "$base/v528.css" -o /tmp/v528.css
+          grep -Fq 'v528-react' /tmp/v528.js
+          grep -Fq 'v528-emotion' /tmp/v528.js
+          grep -Fq 'prefers-reduced-motion: reduce' /tmp/v528.css
+          curl --fail --location --silent --show-error "$base/v529.js" -o /tmp/v529.js
+          curl --fail --location --silent --show-error "$base/v529.css" -o /tmp/v529.css
+          grep -Fq 'v529-tiranon' /tmp/v529.js
+          grep -Fq 'prefers-reduced-motion:reduce' /tmp/v529.css
+          for name in wave_both shy_giggle happy_run sitting_laugh hooray; do
+            curl --fail --location --silent --show-error --retry 2 "$base/reactions/tiranon/$name.webp" -o "/tmp/$name.webp"
+          done
+          echo '24ef77bb5e6c803a482689a796c75251558f4c865668c2e8125e82c5b6bb231f  /tmp/wave_both.webp' | sha256sum -c
+          echo '2929267dd250a71e1b14d92fd1993cc090590c45fc75e20fd7166475b08856af  /tmp/shy_giggle.webp' | sha256sum -c
+          echo 'e70a05734cbcfd61039f73ebec0484fc0b6a11dab70a474418e12bf2dcb5514c  /tmp/happy_run.webp' | sha256sum -c
+          echo 'b59d7c4cbfac4ffc027c9bf7cb80d7af23fbe005856779b2af7e2695dd18a620  /tmp/sitting_laugh.webp' | sha256sum -c
+          echo 'd9fbc8a49bd8352bd458612e7f9ba7a08511da1d2c8d1945120ab54c22372abf  /tmp/hooray.webp' | sha256sum -c
+          echo 'Published V5.29 reactions, V5.27 touch UI, reduced-motion support and essential art are available.'
