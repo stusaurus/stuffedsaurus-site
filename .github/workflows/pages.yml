@@ -30,6 +30,9 @@ on:
       - 'preview/v527.js'
       - 'preview/v528.css'
       - 'preview/v528.js'
+      - 'preview/v529.css'
+      - 'preview/v529.js'
+      - 'preview/reactions/tiranon/**'
       - 'preview/instagram-recent.json'
       - 'preview/instagram-covers/**'
       - '.github/workflows/pages.yml'
@@ -529,6 +532,31 @@ jobs:
           PY
           grep -q 'v528.js?v528' public/index.html
           grep -q 'v528.css?v528' public/index.html
+
+      - name: Publish V5.29 approved Tiranon pose frames
+        if: steps.bundle.outputs.present == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f preview/reactions/tiranon/wave_both.webp
+          (cd preview/reactions/tiranon && sha256sum -c SHA256SUMS)
+          mkdir -p public/reactions/tiranon
+          cp preview/reactions/tiranon/*.webp public/reactions/tiranon/
+          cp preview/v529.css public/v529.css
+          cp preview/v529.js public/v529.js
+          node --check public/v529.js
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('public/index.html')
+          html=p.read_text(encoding='utf-8')
+          assert 'v528.js?v528' in html and 'v528.css?v528' in html
+          assert html.count('</head>')==1 and html.count('</body>')==1
+          html=html.replace('</head>','<link rel="stylesheet" href="v529.css?v529"/>\n</head>',1)
+          html=html.replace('</body>','<script src="v529.js?v529"></script>\n</body>',1)
+          p.write_text(html,encoding='utf-8')
+          PY
+          grep -q 'v529.js?v529' public/index.html
+          grep -q 'v529.css?v529' public/index.html
 
       - name: Configure GitHub Pages
         if: steps.bundle.outputs.present == 'true'

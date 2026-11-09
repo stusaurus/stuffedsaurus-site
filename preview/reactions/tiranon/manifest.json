@@ -1,0 +1,42 @@
+{
+  "source": "tiranon_approved_reaction_art_v1.zip",
+  "status": "five user-approved transparent PNG frames",
+  "export": "224x280 RGBA WebP previews, resized without cropping or repainting",
+  "frames": [
+    {
+      "id": "wave_both",
+      "file": "wave_both.webp",
+      "sha256": "24ef77bb5e6c803a482689a796c75251558f4c865668c2e8125e82c5b6bb231f",
+      "sourcePNGsha256": "d36a7360bc0490407fa8e2e2c5de2c13003bb2c2a9acaa41cb776826724a1f06",
+      "size": 14060
+    },
+    {
+      "id": "shy_giggle",
+      "file": "shy_giggle.webp",
+      "sha256": "2929267dd250a71e1b14d92fd1993cc090590c45fc75e20fd7166475b08856af",
+      "sourcePNGsha256": "cd6070b3c8b96e33bce742f3eda528e261ef09ceabc69b794770225c163afa32",
+      "size": 11528
+    },
+    {
+      "id": "happy_run",
+      "file": "happy_run.webp",
+      "sha256": "e70a05734cbcfd61039f73ebec0484fc0b6a11dab70a474418e12bf2dcb5514c",
+      "sourcePNGsha256": "46b3b55e8dd0734ca73c3a11af67c04939db97d22a17c7e885284fec6c04de8f",
+      "size": 10772
+    },
+    {
+      "id": "sitting_laugh",
+      "file": "sitting_laugh.webp",
+      "sha256": "b59d7c4cbfac4ffc027c9bf7cb80d7af23fbe005856779b2af7e2695dd18a620",
+      "sourcePNGsha256": "ef3e4b7e587107ae5d7c21baa45864aa11917bc2e5d622071eb205ce8192c5a7",
+      "size": 12780
+    },
+    {
+      "id": "hooray",
+      "file": "hooray.webp",
+      "sha256": "d9fbc8a49bd8352bd458612e7f9ba7a08511da1d2c8d1945120ab54c22372abf",
+      "sourcePNGsha256": "bde2f19d016c3ae1e3aeb2507e1159e93aa87ad8e12444ed45ec341debc6ae7b",
+      "size": 12616
+    }
+  ]
+}
