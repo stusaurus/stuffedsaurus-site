@@ -43,3 +43,78 @@
     animation:none!important;transition:none!important;transform:none!important
   }
 }
+
+/* Mobile character-first picture-book layout: the approved art should be
+   large enough to read emotionally, not a thumbnail beside a narrow bubble. */
+@media(max-width:540px){
+  #view-friends .friend-feature-list > .character-story.v529-tiranon{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:11px;
+    padding:18px 14px 23px;
+    text-align:center;
+  }
+  #view-friends .v529-tiranon .character-art{
+    display:block;
+    flex:none;
+    width:min(64vw,240px);
+    max-width:100%;
+    margin:0 auto;
+  }
+  #view-friends .v529-tiranon .character-art img{
+    display:block;
+    width:100%;
+    height:auto;
+    max-height:none;
+    aspect-ratio:4/5;
+    object-fit:contain;
+  }
+  #view-friends .v529-tiranon .v527-art-hint{
+    position:relative;
+    display:table;
+    left:auto;
+    bottom:auto;
+    transform:none;
+    margin:-8px auto 0;
+    padding:3px 12px;
+    font-size:12px;
+  }
+  #view-friends .v529-tiranon .character-copy{
+    width:100%;
+    min-width:0;
+    text-align:center;
+  }
+  #view-friends .v529-tiranon .character-copy .friend-discovery-response.v527-speech{
+    margin:15px auto 10px;
+    padding:12px 14px;
+    max-width:320px;
+    font-size:14px;
+    line-height:1.6;
+    border-radius:17px;
+  }
+  #view-friends .v529-tiranon .character-copy .friend-discovery-response.v527-speech::before{
+    left:calc(50% - 9px);
+    right:auto;
+    top:-10px;
+    width:18px;
+    height:18px;
+    border:0;
+    border-top:2px solid #cfac7d;
+    border-left:2px solid #cfac7d;
+    background:#fffdf8;
+    clip-path:none;
+    transform:rotate(45deg);
+    z-index:-1;
+  }
+  #view-friends .v529-tiranon .character-copy .friend-discovery-label{
+    margin:2px auto 7px;
+  }
+  #view-friends .v529-tiranon .friend-discovery-button{
+    min-width:174px;
+    width:auto;
+    max-width:100%;
+    padding:10px 18px;
+    font-size:14px;
+  }
+}
