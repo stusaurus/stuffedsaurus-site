@@ -16,6 +16,12 @@ for(const width of [320,360,390,430,768,1024,1440]){
     await expect(img).toHaveAttribute('src',/wave_both\.webp/);
     const dimensions=await img.evaluate(x=>({width:x.getBoundingClientRect().width,height:x.getBoundingClientRect().height,complete:x.complete,naturalWidth:x.naturalWidth}));
     expect(dimensions.complete&&dimensions.naturalWidth===224).toBe(true);
+    if(width<=430){
+      const artBounds=await card.locator('.character-art').boundingBox();
+      const bubbleBounds=await response.boundingBox();
+      expect(dimensions.width).toBeGreaterThanOrEqual(190);
+      expect(bubbleBounds.y).toBeGreaterThanOrEqual(artBounds.y+artBounds.height-2);
+    }
     for(let i=0;i<ordered.length;i++){
       const oldText=await response.innerText();
       await art.scrollIntoViewIfNeeded();
