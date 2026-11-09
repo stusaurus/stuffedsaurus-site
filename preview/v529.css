@@ -1,5 +1,5 @@
 /* V5.29 — changes between approved transparent illustrations, not morphing.
-   All five frames share one 320x400 transparent canvas. */
+   All five frames share one 224x280 transparent canvas. */
 #view-friends .v529-tiranon .character-art{overflow:visible;isolation:isolate}
 #view-friends .v529-tiranon .character-art img{
   object-fit:contain;object-position:50% 50%;
