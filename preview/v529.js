@@ -13,6 +13,8 @@
   if (!img || !button || !speech) return;
   card.dataset.v529Installed = 'true';
   card.classList.add('v529-tiranon');
+  const hint = art.querySelector('.v527-art-hint');
+  if (hint) hint.textContent = 'さわってみてね ✿';
 
   const base = new URL('reactions/tiranon/', document.baseURI);
   const ids = ['wave_both', 'shy_giggle', 'happy_run', 'sitting_laugh', 'hooray'];
