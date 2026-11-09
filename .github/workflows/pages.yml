@@ -34,6 +34,8 @@ on:
       - 'preview/v529.js'
       - 'preview/v530.css'
       - 'preview/v530.js'
+      - 'preview/v531.css'
+      - 'preview/v531.js'
       - 'preview/reactions/tiranon/**'
       - 'preview/instagram-recent.json'
       - 'preview/instagram-covers/**'
@@ -580,6 +582,33 @@ jobs:
           PY
           grep -q 'v530.css?v530' public/index.html
           grep -q 'v530.js?v530' public/index.html
+
+      - name: Publish V5.31 iPhone-visible pose reaction controller
+        if: steps.bundle.outputs.present == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp preview/v531.css public/v531.css
+          cp preview/v531.js public/v531.js
+          node --check public/v531.js
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('public/index.html')
+          html=p.read_text(encoding='utf-8')
+          old='<script src="v530.js?v530"></script>'
+          assert html.count(old)==1, 'Expected one V5.30 director to replace'
+          assert 'v529.js?v529' in html
+          assert html.count('</head>')==1
+          html=html.replace(old,'<script src="v531.js?v531"></script>',1)
+          html=html.replace('</head>','<link rel="stylesheet" href="v531.css?v531"/>\n</head>',1)
+          p.write_text(html,encoding='utf-8')
+          PY
+          grep -q 'v531.js?v531' public/index.html
+          grep -q 'v531.css?v531' public/index.html
+          if grep -q 'src="v530.js?v530"' public/index.html; then
+            echo 'Duplicate capture handlers detected in release HTML'
+            exit 1
+          fi
 
       - name: Configure GitHub Pages
         if: steps.bundle.outputs.present == 'true'
