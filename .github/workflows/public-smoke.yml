@@ -8,30 +8,47 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/public-smoke.yml'
-      - '.github/workflows/pages.yml'
+  workflow_run:
+    workflows: ['Publish StuffedSaurus preview']
+    types: [completed]
 permissions:
   contents: read
 jobs:
   public-smoke:
+    # Check the public site after Pages deployment, not concurrently with it.
+    if: >-
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
     runs-on: ubuntu-24.04
+    timeout-minutes: 8
     steps:
-      - name: Verify live homepage and assets
+      - name: Verify V5.27 live homepage, dialogue assets and baseline art
         shell: bash
         run: |
           set -euo pipefail
           base='https://stusaurus.github.io/stuffedsaurus-site'
-          for attempt in 1 2 3 4 5; do
-            if curl --fail --location --silent --show-error --retry 2 "$base/" -o /tmp/home.html && grep -q 'v514.css' /tmp/home.html; then
+          ready=false
+          for attempt in 1 2 3 4 5 6 7 8; do
+            if curl --fail --location --silent --show-error --retry 2 "$base/?v527-smoke=$attempt" -o /tmp/home.html \
+              && grep -Fq 'v527.css?v527' /tmp/home.html \
+              && grep -Fq 'v527.js?v527' /tmp/home.html \
+              && grep -Fq 'v526.js?v526' /tmp/home.html; then
+              ready=true
               break
             fi
-            if [ "$attempt" -eq 5 ]; then
-              echo 'Live homepage did not include the approved V5.14 layer'
-              exit 1
-            fi
-            sleep 15
+            if [ "$attempt" -lt 8 ]; then sleep 15; fi
           done
-          for path in v512.css v512.js v513.css v513.js v514.css v514.js assets/hero-wide.webp assets/hero-mobile-v56.webp; do
+          if [ "$ready" != true ]; then
+            echo 'Live homepage is missing the V5.27 conversation and motion layers'
+            exit 1
+          fi
+          for path in v512.css v512.js v513.css v513.js v514.css v514.js v526.css v526.js v527.css v527.js assets/hero-wide.webp assets/hero-mobile-v56.webp; do
             echo "Checking $path"
             curl --fail --location --silent --show-error --retry 3 --output /dev/null "$base/$path"
           done
-          echo 'Published V5.14 homepage and essential assets responded successfully.'
+          curl --fail --location --silent --show-error "$base/v527.js" -o /tmp/v527.js
+          curl --fail --location --silent --show-error "$base/v527.css" -o /tmp/v527.css
+          grep -Fq 'v527-art-touch' /tmp/v527.js
+          grep -Fq 'v527-speech' /tmp/v527.js
+          grep -Fq 'prefers-reduced-motion:reduce' /tmp/v527.css
+          echo 'Published V5.27 homepage, talk interactions, reduced-motion CSS and essential art are available.'
