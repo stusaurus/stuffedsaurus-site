@@ -22,16 +22,18 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 8
     steps:
-      - name: Verify V5.27 live homepage, dialogue assets and baseline art
+      - name: Verify V5.28 live storybook reactions, dialogue and official art
         shell: bash
         run: |
           set -euo pipefail
           base='https://stusaurus.github.io/stuffedsaurus-site'
           ready=false
           for attempt in 1 2 3 4 5 6 7 8; do
-            if curl --fail --location --silent --show-error --retry 2 "$base/?v527-smoke=$attempt" -o /tmp/home.html \
+            if curl --fail --location --silent --show-error --retry 2 "$base/?v528-smoke=$attempt" -o /tmp/home.html \
               && grep -Fq 'v527.css?v527' /tmp/home.html \
               && grep -Fq 'v527.js?v527' /tmp/home.html \
+              && grep -Fq 'v528.css?v528' /tmp/home.html \
+              && grep -Fq 'v528.js?v528' /tmp/home.html \
               && grep -Fq 'v526.js?v526' /tmp/home.html; then
               ready=true
               break
@@ -39,10 +41,10 @@ jobs:
             if [ "$attempt" -lt 8 ]; then sleep 15; fi
           done
           if [ "$ready" != true ]; then
-            echo 'Live homepage is missing the V5.27 conversation and motion layers'
+            echo 'Live homepage is missing the V5.28 storybook reaction layers'
             exit 1
           fi
-          for path in v512.css v512.js v513.css v513.js v514.css v514.js v526.css v526.js v527.css v527.js assets/hero-wide.webp assets/hero-mobile-v56.webp; do
+          for path in v512.css v512.js v513.css v513.js v514.css v514.js v526.css v526.js v527.css v527.js v528.css v528.js assets/hero-wide.webp assets/hero-mobile-v56.webp; do
             echo "Checking $path"
             curl --fail --location --silent --show-error --retry 3 --output /dev/null "$base/$path"
           done
@@ -51,4 +53,9 @@ jobs:
           grep -Fq 'v527-art-touch' /tmp/v527.js
           grep -Fq 'v527-speech' /tmp/v527.js
           grep -Fq 'prefers-reduced-motion:reduce' /tmp/v527.css
-          echo 'Published V5.27 homepage, talk interactions, reduced-motion CSS and essential art are available.'
+          curl --fail --location --silent --show-error "$base/v528.js" -o /tmp/v528.js
+          curl --fail --location --silent --show-error "$base/v528.css" -o /tmp/v528.css
+          grep -Fq 'v528-react' /tmp/v528.js
+          grep -Fq 'v528-emotion' /tmp/v528.js
+          grep -Fq 'prefers-reduced-motion: reduce' /tmp/v528.css
+          echo 'Published V5.28 reactions, V5.27 touch UI, reduced-motion support and essential art are available.'
