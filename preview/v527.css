@@ -1,0 +1,232 @@
+/* V5.27 — gentle storybook speech, character motion only after a tap.
+   The source image stays whole; never independently warp teeth, spikes or wings. */
+#view-friends .v527-chat .character-art{
+  position:relative;
+  isolation:isolate;
+  overflow:visible;
+}
+#view-friends .v527-chat .character-art img{
+  position:relative;
+  z-index:0;
+  transform-origin:50% 72%;
+  transform:translate3d(0,0,0) rotate(0deg);
+  /* Deliberately no persistent transition or floating idle animation. */
+  transition:none;
+}
+#view-friends .v527-chat .v527-art-touch{
+  appearance:none;
+  position:absolute;
+  inset:0;
+  display:block;
+  width:100%;
+  height:100%;
+  z-index:1;
+  padding:0;
+  border:0;
+  border-radius:inherit;
+  background:transparent;
+  cursor:pointer;
+  touch-action:manipulation;
+}
+#view-friends .v527-chat .v527-art-touch:focus-visible{
+  outline:4px solid #628c62;
+  outline-offset:3px;
+}
+#view-friends .v527-chat .v527-art-hint{
+  pointer-events:none;
+  position:absolute;
+  left:50%;
+  bottom:7px;
+  transform:translateX(-50%);
+  width:max-content;
+  max-width:95%;
+  z-index:2;
+  box-sizing:border-box;
+  padding:3px 9px;
+  border:1px solid rgba(159,121,83,.32);
+  border-radius:999px;
+  color:#6d5a43;
+  background:rgba(255,251,236,.93);
+  box-shadow:0 2px 5px rgba(87,72,40,.08);
+  text-align:center;
+  font-size:11px;
+  line-height:1.5;
+  font-weight:750;
+}
+#view-friends .v527-chat .character-copy{
+  min-width:0;
+}
+/* Replace the form-like message box with a speech balloon that points to art. */
+#view-friends .v527-chat .character-copy .friend-discovery-response.v527-speech{
+  position:relative;
+  display:block;
+  isolation:isolate;
+  box-sizing:border-box;
+  max-width:100%;
+  margin:8px 0 13px;
+  padding:14px 17px;
+  color:#54412f;
+  background:#fffdf8;
+  border:2px solid #cfac7d;
+  border-radius:24px 24px 24px 7px;
+  box-shadow:0 4px 12px rgba(94,67,39,.075);
+  font-size:clamp(14px,1.45vw,17px);
+  font-weight:800;
+  line-height:1.7;
+  letter-spacing:.01em;
+  overflow-wrap:anywhere;
+}
+#view-friends .v527-chat .character-copy .friend-discovery-response.v527-speech::before{
+  content:'';
+  position:absolute;
+  top:23px;
+  left:-13px;
+  width:17px;
+  height:20px;
+  z-index:-1;
+  background:#fffdf8;
+  border-left:2px solid #cfac7d;
+  border-bottom:2px solid #cfac7d;
+  clip-path:polygon(100% 0,0 48%,100% 100%);
+}
+#view-friends .v527-chat:nth-child(even) .character-copy .friend-discovery-response.v527-speech{
+  border-radius:24px 24px 7px 24px;
+}
+#view-friends .v527-chat:nth-child(even) .character-copy .friend-discovery-response.v527-speech::before{
+  left:auto;
+  right:-13px;
+  border:0;
+  border-right:2px solid #cfac7d;
+  border-bottom:2px solid #cfac7d;
+  clip-path:polygon(0 0,100% 48%,0 100%);
+}
+#view-friends .v527-stegon .character-copy .friend-discovery-response.v527-speech{
+  background:#fff9ff;
+  border-color:#c5a3ca;
+}
+#view-friends .v527-stegon .character-copy .friend-discovery-response.v527-speech::before{
+  background:#fff9ff;
+  border-color:#c5a3ca;
+}
+#view-friends .v527-puteran .character-copy .friend-discovery-response.v527-speech{
+  background:#f7fdff;
+  border-color:#9ebdc9;
+}
+#view-friends .v527-puteran .character-copy .friend-discovery-response.v527-speech::before{
+  background:#f7fdff;
+  border-color:#9ebdc9;
+}
+#view-friends .v527-chat .friend-discovery-v526{
+  margin:6px 0 13px;
+  padding:0;
+  border:0;
+  border-radius:0;
+  box-shadow:none;
+  background:transparent;
+}
+#view-friends .v527-chat .character-copy .friend-discovery-label{
+  margin:0 0 7px;
+  color:#85664c;
+  font-size:12px;
+  letter-spacing:.02em;
+}
+#view-friends .v527-chat .friend-discovery-button{
+  min-height:46px;
+  border:1.5px solid #c39b68;
+  background:linear-gradient(165deg,#ffefc0,#f6da94);
+  border-radius:999px;
+  padding:9px 17px;
+  font-size:14px;
+  color:#624728;
+  box-shadow:0 3px 0 #dfbc82;
+  transition:background .15s ease,transform .1s ease,box-shadow .1s ease;
+}
+#view-friends .v527-chat .friend-discovery-button:active{
+  transform:translateY(2px);
+  box-shadow:0 1px 0 #dfbc82;
+}
+#view-friends .v527-chat .friend-discovery-button:hover{
+  background:#fce5ac;
+}
+#view-friends .v527-chat .friend-discovery-button:focus-visible{
+  outline:3px solid #628c62;
+  outline-offset:3px;
+}
+
+/* Different character personalities, on a whole-image rigid transform. */
+@keyframes v527-tiranon-hop{
+  0%,100%{transform:translate3d(0,0,0) rotate(0deg)}
+  30%{transform:translate3d(0,-9px,0) rotate(-2.1deg)}
+  56%{transform:translate3d(0,-1px,0) rotate(1.4deg)}
+  77%{transform:translate3d(0,-3px,0) rotate(-.5deg)}
+}
+@keyframes v527-stegon-sway{
+  0%,100%{transform:translate3d(0,0,0) rotate(0deg)}
+  38%{transform:translate3d(-5px,-1px,0) rotate(-1.6deg)}
+  70%{transform:translate3d(2px,0,0) rotate(.7deg)}
+}
+@keyframes v527-puteran-pose{
+  0%,100%{transform:translate3d(0,0,0) rotate(0deg)}
+  38%{transform:translate3d(0,-7px,0) rotate(2.5deg)}
+  70%{transform:translate3d(0,-2px,0) rotate(-1deg)}
+}
+@keyframes v527-bubble-appear{
+  0%{opacity:.5;transform:translate3d(0,5px,0)}
+  100%{opacity:1;transform:translate3d(0,0,0)}
+}
+#view-friends .v527-tiranon .character-art img.v527-react{
+  animation:v527-tiranon-hop 520ms ease-out 1;
+}
+#view-friends .v527-stegon .character-art img.v527-react{
+  animation:v527-stegon-sway 640ms ease-in-out 1;
+}
+#view-friends .v527-puteran .character-art img.v527-react{
+  animation:v527-puteran-pose 540ms ease-out 1;
+}
+#view-friends .v527-chat .v527-speech.v527-bubble-enter{
+  animation:v527-bubble-appear 260ms ease-out 1;
+}
+@media(max-width:769px){
+  #view-friends .v527-chat .character-copy .friend-discovery-response.v527-speech{
+    margin:7px 0 10px;
+    padding:10px 12px;
+    border-radius:17px 17px 17px 5px;
+    font-size:13px;
+    line-height:1.55;
+  }
+  /* Mobile art is always in the left column, even for Stegon. */
+  #view-friends .v527-chat:nth-child(even) .character-copy .friend-discovery-response.v527-speech{
+    border-radius:17px 17px 17px 5px;
+  }
+  #view-friends .v527-chat:nth-child(even) .character-copy .friend-discovery-response.v527-speech::before{
+    right:auto;
+    left:-13px;
+    border:0;
+    border-left:2px solid #c5a3ca;
+    border-bottom:2px solid #c5a3ca;
+    clip-path:polygon(100% 0,0 48%,100% 100%);
+  }
+  #view-friends .v527-chat .v527-art-hint{bottom:4px;font-size:10px;padding:2px 6px}
+  #view-friends .v527-chat .friend-discovery-v526{margin:5px 0 11px}
+}
+@media(max-width:380px){
+  #view-friends .v527-chat .character-copy .friend-discovery-response.v527-speech{
+    font-size:12px;
+    padding:9px 10px;
+  }
+  #view-friends .v527-chat .v527-art-hint{font-size:9px;letter-spacing:-.03em;padding:2px 3px}
+  #view-friends .v527-chat .friend-discovery-button{
+    width:100%;
+    min-height:44px;
+    font-size:12px;
+    padding:7px 4px;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  #view-friends .v527-chat .character-art img.v527-react,
+  #view-friends .v527-chat .v527-speech.v527-bubble-enter{
+    animation:none!important;
+    transition:none!important;
+  }
+  #view-friends .v527-chat .friend-discovery-button{transition:none!important}
+}
