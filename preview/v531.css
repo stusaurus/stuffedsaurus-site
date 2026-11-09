@@ -1,0 +1,77 @@
+/* V5.31 iPhone field-video fix: show the pose immediately and for long
+   enough to be noticed, with no native grey tap highlight. */
+#view-friends .v531-director .v527-art-touch,
+#view-friends .v531-director .friend-discovery-button,
+#view-friends .v531-director .character-art{
+  -webkit-tap-highlight-color:transparent!important;
+  -webkit-touch-callout:none;
+  touch-action:manipulation;
+}
+#view-friends .v531-director .v527-art-touch{
+  -webkit-user-select:none;
+  user-select:none;
+  outline-offset:4px;
+}
+#view-friends .v531-director .character-art img{
+  transition:none!important;
+  backface-visibility:visible;
+  opacity:1!important;
+  filter:none!important;
+}
+#view-friends .v531-director .character-art img.v527-react,
+#view-friends .v531-director .character-art img.v528-react,
+#view-friends .v531-director .character-art img.v529-react,
+#view-friends .v531-director .character-art img.v530-prepare,
+#view-friends .v531-director .character-art img.v530-perform,
+#view-friends .v531-director .character-art img.v530-land{
+  animation:none!important;
+}
+#view-friends .v531-director .v531-sparkle{
+  position:absolute;
+  z-index:2;
+  top:8%;
+  right:3%;
+  font-size:28px;
+  line-height:1;
+  color:#d2a956;
+  opacity:0;
+  pointer-events:none;
+  transform:translate3d(0,0,0);
+}
+@keyframes v531-pose-beat{
+  0%{transform:translate3d(0,0,0) rotate(0deg)}
+  30%{transform:translate3d(0,-6px,0) rotate(1deg)}
+  75%,100%{transform:translate3d(0,0,0) rotate(0deg)}
+}
+@keyframes v531-sparkle-beat{
+  0%{opacity:0;transform:translate3d(0,5px,0)}
+  27%,62%{opacity:1;transform:translate3d(0,-2px,0)}
+  100%{opacity:0;transform:translate3d(0,-6px,0)}
+}
+#view-friends .v531-director .character-art img.v531-motion{
+  animation:v531-pose-beat 540ms ease-out 1!important;
+}
+#view-friends .v531-director .v531-sparkle.v531-pop{
+  animation:v531-sparkle-beat 780ms ease-out 1;
+}
+@media(max-width:540px){
+  #view-friends .v531-director .character-copy .friend-discovery-v526{
+    margin:5px auto 13px;
+  }
+  #view-friends .v531-director .character-copy .friend-discovery-v526 .friend-discovery-label{
+    margin-bottom:4px;
+  }
+  #view-friends .v531-director .character-copy p:not(.character-taxonomy):not(.friend-discovery-response):not(.friend-discovery-label){
+    margin-top:8px;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  #view-friends .v531-director .character-art img.v531-motion,
+  #view-friends .v531-director .v531-sparkle.v531-pop{
+    animation:none!important;
+    transition:none!important;
+  }
+  #view-friends .v531-director .character-art img{
+    transform:none!important;
+  }
+}
