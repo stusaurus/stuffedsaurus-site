@@ -1,0 +1,64 @@
+name: V5.28 storybook reaction browser QA
+on:
+  pull_request:
+    paths:
+      - 'preview/v528.*'
+      - 'qa/v528.spec.cjs'
+      - 'site.zip'
+      - '.github/workflows/pages.yml'
+      - '.github/workflows/v528-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  character-reaction-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Chromium test runtime
+        run: |
+          npm install --no-save @playwright/test@1.58.2
+          npx playwright install --with-deps chromium
+      - name: Build current site and V5.28 candidate
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          from shutil import copy2,copytree
+          out=Path('public')
+          out.mkdir(exist_ok=True)
+          with ZipFile('site.zip') as z:
+              z.extractall(out)
+          html=(out/'index.html').read_text(encoding='utf-8')
+          for version in ('512','513','514','515','516','517','518','519','520','525','526','527','528'):
+              for ext in ('css','js'):
+                  src=Path('preview')/f'v{version}.{ext}'
+                  if not src.exists():
+                      continue
+                  copy2(src,out/src.name)
+                  anchor='</head>' if ext=='css' else '</body>'
+                  addition=(f'<link rel="stylesheet" href="{src.name}"/>' if ext=='css'
+                            else f'<script src="{src.name}"></script>')
+                  assert anchor in html
+                  html=html.replace(anchor,addition+'\n'+anchor,1)
+          copy2(Path('preview/instagram-recent.json'),out/'instagram-recent.json')
+          copytree(Path('preview/instagram-covers'),out/'instagram-covers')
+          (out/'index.html').write_text(html,encoding='utf-8')
+          assert 'v528.css' in html and 'v528.js' in html
+          PY
+      - name: Check JavaScript syntax
+        run: node --check preview/v528.js
+      - name: Browser test personality reactions and accessibility
+        run: |
+          python3 -m http.server 8765 -d public >/tmp/stuffedsaurus-v528-server.log 2>&1 &
+          npx playwright test qa/v528.spec.cjs --reporter=line
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v528-storybook-reaction-screenshots
+          path: test-results/
+          if-no-files-found: ignore

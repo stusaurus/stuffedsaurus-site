@@ -1,0 +1,100 @@
+/* V5.28 — illustrated emotional beats without editing any approved art.
+   The character image remains rigid: translate + rotate only, with a deliberate
+   anticipation, a readable peak and a gentle settle. User action only. */
+#view-friends .v528-expressive .character-art{
+  isolation:isolate;
+}
+#view-friends .v528-expressive .character-art img{
+  /* No idle transform, morph, repeated wobble, scaling, or looping. */
+  transform:translate3d(0,0,0) rotate(0deg);
+  transition:none;
+}
+#view-friends .v528-expressive .v527-art-hint{
+  background:rgba(255,251,240,.96);
+  border-color:rgba(154,122,82,.28);
+  color:#6a5340;
+  box-shadow:0 2px 5px rgba(73,53,30,.08);
+}
+/* Tiny marks live OUTSIDE the artwork. They are not facial details. */
+#view-friends .v528-expressive .v528-emotion{
+  position:absolute;
+  top:4%;right:7%;z-index:2;
+  display:block;line-height:1;
+  width:32px;height:32px;
+  color:#dcae54;
+  font-size:30px;font-weight:600;
+  text-align:center;
+  pointer-events:none;
+  opacity:0;
+  transform:translate3d(0,6px,0) rotate(-12deg) scale(.75);
+  text-shadow:0 1px 0 #fffaf1,1px 1px 2px rgba(113,78,34,.12);
+}
+#view-friends .v528-stegon .v528-emotion{color:#bf8fad}
+#view-friends .v528-puteran .v528-emotion{color:#7aa8ba}
+/* Anticipation -> hop -> short second lift -> soft stillness. */
+@keyframes v528-tiranon-hello{
+   0%,100%{transform:translate3d(0,0,0) rotate(0deg)}
+   11%{transform:translate3d(-1px,2px,0) rotate(-1.2deg)}
+   34%{transform:translate3d(1px,-13px,0) rotate(2.6deg)}
+   47%{transform:translate3d(2px,-5px,0) rotate(1.2deg)}
+   56%{transform:translate3d(0,0,0) rotate(-1deg)}
+   69%{transform:translate3d(1px,-5px,0) rotate(.8deg)}
+   84%{transform:translate3d(0,0,0) rotate(-.3deg)}
+}
+/* A relaxed, friendly lean. Stegon stays a four-legged creature. */
+@keyframes v528-stegon-hello{
+   0%,100%{transform:translate3d(0,0,0) rotate(0deg)}
+   16%{transform:translate3d(-1px,0,0) rotate(-.5deg)}
+   43%{transform:translate3d(5px,-2px,0) rotate(1.2deg)}
+   60%{transform:translate3d(5px,-2px,0) rotate(1.2deg)}
+   80%{transform:translate3d(1px,0,0) rotate(.25deg)}
+}
+/* Pteran: a tiny airborne bow and a controlled landing. No wing warp. */
+@keyframes v528-puteran-hello{
+   0%,100%{transform:translate3d(0,0,0) rotate(0deg)}
+   12%{transform:translate3d(-2px,1px,0) rotate(-1deg)}
+   38%{transform:translate3d(5px,-12px,0) rotate(3.4deg)}
+   53%{transform:translate3d(7px,-11px,0) rotate(3deg)}
+   75%{transform:translate3d(2px,-3px,0) rotate(-.8deg)}
+   88%{transform:translate3d(0,0,0) rotate(.3deg)}
+}
+@keyframes v528-emotion-pop{
+   0%,12%,100%{opacity:0;transform:translate3d(0,7px,0) rotate(-12deg) scale(.7)}
+   32%{opacity:1;transform:translate3d(1px,-5px,0) rotate(7deg) scale(1)}
+   63%{opacity:.9;transform:translate3d(3px,-8px,0) rotate(1deg) scale(1.06)}
+   85%{opacity:0;transform:translate3d(4px,-13px,0) rotate(8deg) scale(.9)}
+}
+@keyframes v528-speech-in{
+   0%{opacity:.65;transform:translate3d(0,4px,0)}
+   100%{opacity:1;transform:translate3d(0,0,0)}
+}
+#view-friends .v528-tiranon .character-art img.v528-react{
+  animation:v528-tiranon-hello 830ms ease-in-out 1;
+}
+#view-friends .v528-stegon .character-art img.v528-react{
+  animation:v528-stegon-hello 960ms ease-in-out 1;
+}
+#view-friends .v528-puteran .character-art img.v528-react{
+  animation:v528-puteran-hello 870ms ease-in-out 1;
+}
+#view-friends .v528-expressive .v528-emotion.v528-emote{
+  animation:v528-emotion-pop 830ms ease-out 1;
+}
+#view-friends .v528-expressive .v527-speech.v528-speech-appear{
+  animation:v528-speech-in 230ms ease-out 1;
+}
+/* The screen-reader status changes without visual motion for users who ask
+   for reduced motion. Pressing the image still produces the dialogue. */
+@media (prefers-reduced-motion: reduce){
+  #view-friends .v528-expressive .character-art img.v528-react,
+  #view-friends .v528-expressive .v528-emotion.v528-emote,
+  #view-friends .v528-expressive .v527-speech.v528-speech-appear{
+    animation:none!important;
+    transition:none!important;
+  }
+}
+@media(max-width:380px){
+  #view-friends .v528-expressive .v528-emotion{
+    width:24px;height:24px;font-size:23px;right:2%;
+  }
+}
