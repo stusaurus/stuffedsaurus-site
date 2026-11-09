@@ -1,13 +1,6 @@
 name: Verify published StuffedSaurus homepage
 on:
   workflow_dispatch:
-  pull_request:
-    paths:
-      - '.github/workflows/public-smoke.yml'
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/public-smoke.yml'
   workflow_run:
     workflows: ['Publish StuffedSaurus preview']
     types: [completed]
@@ -15,23 +8,22 @@ permissions:
   contents: read
 jobs:
   public-smoke:
-    # Do not check unreleased V5.30 from a pull request. Verify the live site
-    # only after a successful Pages publish or a main-branch smoke update.
+    # Verify the production site only after Pages deploys; checking during
+    # merge/push would read the previous version and cause false failures.
     if: >-
-      github.event_name != 'pull_request' &&
-      (github.event_name != 'workflow_run' ||
-       (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main'))
+      github.event_name != 'workflow_run' ||
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
     runs-on: ubuntu-24.04
     timeout-minutes: 8
     steps:
-      - name: Verify V5.30 live storybook reactions, dialogue and official art
+      - name: Verify V5.31 live storybook reactions, dialogue and official art
         shell: bash
         run: |
           set -euo pipefail
           base='https://stusaurus.github.io/stuffedsaurus-site'
           ready=false
           for attempt in 1 2 3 4 5 6 7 8; do
-            if curl --fail --location --silent --show-error --retry 2 "$base/?v530-smoke=$attempt" -o /tmp/home.html \
+            if curl --fail --location --silent --show-error --retry 2 "$base/?v531-smoke=$attempt" -o /tmp/home.html \
               && grep -Fq 'v527.css?v527' /tmp/home.html \
               && grep -Fq 'v527.js?v527' /tmp/home.html \
               && grep -Fq 'v528.css?v528' /tmp/home.html \
@@ -39,7 +31,8 @@ jobs:
               && grep -Fq 'v529.css?v529' /tmp/home.html \
               && grep -Fq 'v529.js?v529' /tmp/home.html \
               && grep -Fq 'v530.css?v530' /tmp/home.html \
-              && grep -Fq 'v530.js?v530' /tmp/home.html \
+              && grep -Fq 'v531.css?v531' /tmp/home.html \
+              && grep -Fq 'v531.js?v531' /tmp/home.html \
               && grep -Fq 'v526.js?v526' /tmp/home.html; then
               ready=true
               break
@@ -47,10 +40,10 @@ jobs:
             if [ "$attempt" -lt 8 ]; then sleep 15; fi
           done
           if [ "$ready" != true ]; then
-            echo 'Live homepage is missing the V5.30 storybook reaction layers'
+            echo 'Live homepage is missing the V5.31 storybook reaction layers'
             exit 1
           fi
-          for path in v512.css v512.js v513.css v513.js v514.css v514.js v526.css v526.js v527.css v527.js v528.css v528.js v529.css v529.js v530.css v530.js reactions/tiranon/wave_both.webp reactions/tiranon/shy_giggle.webp reactions/tiranon/happy_run.webp reactions/tiranon/sitting_laugh.webp reactions/tiranon/hooray.webp assets/hero-wide.webp assets/hero-mobile-v56.webp; do
+          for path in v512.css v512.js v513.css v513.js v514.css v514.js v526.css v526.js v527.css v527.js v528.css v528.js v529.css v529.js v530.css v530.js v531.css v531.js reactions/tiranon/wave_both.webp reactions/tiranon/shy_giggle.webp reactions/tiranon/happy_run.webp reactions/tiranon/sitting_laugh.webp reactions/tiranon/hooray.webp assets/hero-wide.webp assets/hero-mobile-v56.webp; do
             echo "Checking $path"
             curl --fail --location --silent --show-error --retry 3 --output /dev/null "$base/$path"
           done
@@ -81,4 +74,15 @@ jobs:
           grep -Fq 'v530-director' /tmp/v530.js
           grep -Fq 'stopImmediatePropagation' /tmp/v530.js
           grep -Fq 'prefers-reduced-motion:reduce' /tmp/v530.css
-          echo 'Published V5.30 reactions, V5.27 touch UI, reduced-motion support and essential art are available.'
+          # The retired V5.30 capture listener must not be loaded in parallel.
+          if grep -Fq 'src="v530.js?v530"' /tmp/home.html; then
+            echo 'Retired V5.30 click director is still active.'
+            exit 1
+          fi
+          curl --fail --location --silent --show-error "$base/v531.js" -o /tmp/v531.js
+          curl --fail --location --silent --show-error "$base/v531.css" -o /tmp/v531.css
+          grep -Fq 'v531-director' /tmp/v531.js
+          grep -Fq 'stopImmediatePropagation' /tmp/v531.js
+          grep -Fq "reduce.matches" /tmp/v531.js
+          grep -Fq -- '-webkit-tap-highlight-color:transparent' /tmp/v531.css
+          echo 'Published V5.31 reactions, V5.27 touch UI, reduced-motion support and essential art are available.'
