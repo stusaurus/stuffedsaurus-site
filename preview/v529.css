@@ -1,0 +1,45 @@
+/* V5.29 — changes between approved transparent illustrations, not morphing.
+   All five frames share one 320x400 transparent canvas. */
+#view-friends .v529-tiranon .character-art{overflow:visible;isolation:isolate}
+#view-friends .v529-tiranon .character-art img{
+  object-fit:contain;object-position:50% 50%;
+  transform:translate3d(0,0,0) rotate(0deg);
+  transition:none;will-change:auto
+}
+#view-friends .v529-tiranon .character-art img.v528-react,
+#view-friends .v529-tiranon .character-art img.v527-react{animation:none!important}
+#view-friends .v529-tiranon .v528-emotion{display:none!important}
+#view-friends .v529-tiranon .v527-art-hint{bottom:5px}
+@keyframes v529-hello{
+  0%,100%{transform:translate3d(0,0,0) rotate(0deg)}
+  17%{transform:translate3d(0,2px,0) rotate(-.5deg)}
+  46%{transform:translate3d(0,-7px,0) rotate(1.3deg)}
+  67%{transform:translate3d(0,-5px,0) rotate(.3deg)}
+}
+@keyframes v529-run{
+  0%,100%{transform:translate3d(0,0,0) rotate(0deg)}
+  28%{transform:translate3d(5px,-2px,0) rotate(1deg)}
+  57%{transform:translate3d(7px,-5px,0) rotate(1.7deg)}
+  75%{transform:translate3d(4px,-2px,0) rotate(.7deg)}
+}
+@keyframes v529-giggle{
+  0%,100%{transform:translate3d(0,0,0) rotate(0deg)}
+  28%{transform:translate3d(-1px,-3px,0) rotate(-1deg)}
+  56%{transform:translate3d(1px,-2px,0) rotate(1deg)}
+}
+#view-friends .v529-tiranon.v529-speaking .character-art img.v529-react{
+  animation:v529-hello 700ms ease-in-out 1
+}
+#view-friends .v529-tiranon.v529-speaking[data-v529-pose='happy_run'] .character-art img.v529-react{
+  animation:v529-run 700ms ease-in-out 1
+}
+#view-friends .v529-tiranon.v529-speaking[data-v529-pose='shy_giggle'] .character-art img.v529-react,
+#view-friends .v529-tiranon.v529-speaking[data-v529-pose='sitting_laugh'] .character-art img.v529-react{
+  animation:v529-giggle 700ms ease-in-out 1
+}
+@media(prefers-reduced-motion:reduce){
+  #view-friends .v529-tiranon .character-art img.v529-react,
+  #view-friends .v529-tiranon .character-art img{
+    animation:none!important;transition:none!important;transform:none!important
+  }
+}
