@@ -15,10 +15,12 @@ permissions:
   contents: read
 jobs:
   public-smoke:
-    # Check the public site after Pages deployment, not concurrently with it.
+    # Do not check unreleased V5.28 from a pull request. Verify the live site
+    # only after a successful Pages publish or a main-branch smoke update.
     if: >-
-      github.event_name != 'workflow_run' ||
-      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
+      github.event_name != 'pull_request' &&
+      (github.event_name != 'workflow_run' ||
+       (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main'))
     runs-on: ubuntu-24.04
     timeout-minutes: 8
     steps:
