@@ -1,0 +1,65 @@
+name: V5.30 single-director character reaction QA
+on:
+  pull_request:
+    paths:
+      - 'preview/v530.*'
+      - 'qa/v530.spec.cjs'
+      - '.github/workflows/pages.yml'
+      - '.github/workflows/v530-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  v530-reaction-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Playwright Chromium
+        run: |
+          npm install --no-save @playwright/test@1.58.2
+          npx playwright install --with-deps chromium
+      - name: Verify unchanged approved pose files
+        run: |
+          (cd preview/reactions/tiranon && sha256sum -c SHA256SUMS)
+      - name: Build live layers plus V5.30
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          from shutil import copy2, copytree
+          out=Path('public')
+          out.mkdir(exist_ok=True)
+          with ZipFile('site.zip') as archive: archive.extractall(out)
+          html=(out/'index.html').read_text(encoding='utf-8')
+          for version in ('512','513','514','515','516','517','518','519','520','525','526','527','528','529','530'):
+              for ext in ('css','js'):
+                  source=Path('preview')/f'v{version}.{ext}'
+                  if not source.exists():continue
+                  copy2(source,out/source.name)
+                  anchor='</head>' if ext=='css' else '</body>'
+                  injection=(f'<link rel="stylesheet" href="{source.name}"/>'
+                            if ext=='css' else f'<script src="{source.name}"></script>')
+                  assert anchor in html
+                  html=html.replace(anchor,injection+'\n'+anchor,1)
+          copy2(Path('preview/instagram-recent.json'),out/'instagram-recent.json')
+          copytree(Path('preview/instagram-covers'),out/'instagram-covers')
+          copytree(Path('preview/reactions/tiranon'),out/'reactions/tiranon')
+          (out/'index.html').write_text(html,encoding='utf-8')
+          assert 'v530.css' in html and 'v530.js' in html
+          PY
+      - name: Check JavaScript syntax
+        run: node --check preview/v530.js
+      - name: Browser-check timing, 7 widths, 5 poses, reduced-motion and fallback
+        run: |
+          python3 -m http.server 8765 -d public >/tmp/v530-server.log 2>&1 &
+          npx playwright test qa/v530.spec.cjs --reporter=line
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v530-reaction-storyboard-screenshots
+          path: test-results/
+          if-no-files-found: ignore
