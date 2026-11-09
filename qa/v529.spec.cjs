@@ -15,7 +15,7 @@ for(const width of [320,360,390,430,768,1024,1440]){
     await expect(card).toHaveClass(/v529-ready/);
     await expect(img).toHaveAttribute('src',/wave_both\.webp/);
     const dimensions=await img.evaluate(x=>({width:x.getBoundingClientRect().width,height:x.getBoundingClientRect().height,complete:x.complete,naturalWidth:x.naturalWidth}));
-    expect(dimensions.complete&&dimensions.naturalWidth===320).toBe(true);
+    expect(dimensions.complete&&dimensions.naturalWidth===224).toBe(true);
     for(let i=0;i<ordered.length;i++){
       const oldText=await response.innerText();
       await art.scrollIntoViewIfNeeded();
@@ -48,7 +48,7 @@ test('V5.29 all approved image URLs resolve and preload',async({browser})=>{
      const data=await response.arrayBuffer();
      return {width:img.naturalWidth,height:img.naturalHeight,ok:response.ok,bytes:data.byteLength};
    },asset);
-   expect(result.width).toBe(320);expect(result.height).toBe(400);
+   expect(result.width).toBe(224);expect(result.height).toBe(280);
    expect(result.ok).toBe(true);expect(result.bytes).toBeGreaterThan(1000);
  }
  await page.close();
