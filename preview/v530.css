@@ -1,0 +1,82 @@
+/* V5.30 — five approved opaque-in-time full-body frames.
+   One <img> element only; no overlapping copies, opacity blend or scale.
+   Motion occurs once per tap, with a short readable anticipation and landing.
+ */
+#view-friends .v530-director .character-art img {
+  transform:translate3d(0,0,0) rotate(0deg);
+  transition:none;
+  will-change:auto;
+}
+#view-friends .v530-director .character-art img.v529-react,
+#view-friends .v530-director .character-art img.v528-react,
+#view-friends .v530-director .character-art img.v527-react {
+  animation:none!important;
+}
+#view-friends .v530-director .v528-emotion{display:none!important}
+
+/* Anticipation: whole illustration leans forward very slightly. */
+@keyframes v530-prepare {
+  0%{transform:translate3d(0,0,0) rotate(0deg)}
+  100%{transform:translate3d(0,3px,0) rotate(-.7deg)}
+}
+/* One unwarped drawing leaps and holds. No automatic oscillation. */
+@keyframes v530-hooray {
+  0%{transform:translate3d(0,-6px,0) rotate(-.7deg)}
+  26%{transform:translate3d(0,-11px,0) rotate(.8deg)}
+  57%,100%{transform:translate3d(0,-6px,0) rotate(0deg)}
+}
+@keyframes v530-shy {
+  0%{transform:translate3d(0,-2px,0) rotate(-1deg)}
+  34%{transform:translate3d(-2px,-3px,0) rotate(-1.4deg)}
+  64%,100%{transform:translate3d(0,-2px,0) rotate(-.4deg)}
+}
+@keyframes v530-run {
+  0%{transform:translate3d(-3px,-2px,0) rotate(-.4deg)}
+  26%{transform:translate3d(6px,-7px,0) rotate(1deg)}
+  57%,100%{transform:translate3d(6px,-4px,0) rotate(.4deg)}
+}
+@keyframes v530-laugh {
+  0%{transform:translate3d(0,-2px,0) rotate(0deg)}
+  38%{transform:translate3d(0,-4px,0) rotate(.6deg)}
+  68%,100%{transform:translate3d(0,-2px,0) rotate(0deg)}
+}
+@keyframes v530-wave {
+  0%{transform:translate3d(0,-2px,0) rotate(-.9deg)}
+  38%{transform:translate3d(0,-4px,0) rotate(1.1deg)}
+  67%,100%{transform:translate3d(0,-2px,0) rotate(0deg)}
+}
+@keyframes v530-land {
+  0%{transform:translate3d(0,-3px,0) rotate(.3deg)}
+  56%{transform:translate3d(0,1px,0) rotate(-.2deg)}
+  100%{transform:translate3d(0,0,0) rotate(0deg)}
+}
+#view-friends .v530-director .character-art img.v530-prepare {
+  animation:v530-prepare 110ms ease-out both!important;
+}
+#view-friends .v530-director[data-v530-pose='hooray'] .character-art img.v530-perform {
+  animation:v530-hooray 540ms ease-out both!important;
+}
+#view-friends .v530-director[data-v530-pose='shy_giggle'] .character-art img.v530-perform {
+  animation:v530-shy 650ms ease-out both!important;
+}
+#view-friends .v530-director[data-v530-pose='happy_run'] .character-art img.v530-perform {
+  animation:v530-run 560ms ease-out both!important;
+}
+#view-friends .v530-director[data-v530-pose='sitting_laugh'] .character-art img.v530-perform {
+  animation:v530-laugh 640ms ease-out both!important;
+}
+#view-friends .v530-director[data-v530-pose='wave_both'] .character-art img.v530-perform {
+  animation:v530-wave 580ms ease-out both!important;
+}
+#view-friends .v530-director .character-art img.v530-land {
+  animation:v530-land 185ms ease-out both!important;
+}
+@media(prefers-reduced-motion:reduce){
+  #view-friends .v530-director .character-art img.v530-prepare,
+  #view-friends .v530-director .character-art img.v530-perform,
+  #view-friends .v530-director .character-art img.v530-land{
+    animation:none!important;
+    transform:none!important;
+    transition:none!important;
+  }
+}
