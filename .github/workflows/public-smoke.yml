@@ -1,6 +1,10 @@
 name: Verify published StuffedSaurus homepage
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/public-smoke.yml'
   workflow_run:
     workflows: ['Publish StuffedSaurus preview']
     types: [completed]
@@ -14,7 +18,7 @@ jobs:
       github.event_name != 'workflow_run' ||
       (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
     runs-on: ubuntu-24.04
-    timeout-minutes: 8
+    timeout-minutes: 10
     steps:
       - name: Verify V5.31 live storybook reactions, dialogue and official art
         shell: bash
@@ -22,7 +26,7 @@ jobs:
           set -euo pipefail
           base='https://stusaurus.github.io/stuffedsaurus-site'
           ready=false
-          for attempt in 1 2 3 4 5 6 7 8; do
+          for attempt in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20; do
             if curl --fail --location --silent --show-error --retry 2 "$base/?v531-smoke=$attempt" -o /tmp/home.html \
               && grep -Fq 'v527.css?v527' /tmp/home.html \
               && grep -Fq 'v527.js?v527' /tmp/home.html \
@@ -37,7 +41,7 @@ jobs:
               ready=true
               break
             fi
-            if [ "$attempt" -lt 8 ]; then sleep 15; fi
+            if [ "$attempt" -lt 20 ]; then sleep 15; fi
           done
           if [ "$ready" != true ]; then
             echo 'Live homepage is missing the V5.31 storybook reaction layers'
