@@ -32,6 +32,8 @@ on:
       - 'preview/v528.js'
       - 'preview/v529.css'
       - 'preview/v529.js'
+      - 'preview/v530.css'
+      - 'preview/v530.js'
       - 'preview/reactions/tiranon/**'
       - 'preview/instagram-recent.json'
       - 'preview/instagram-covers/**'
@@ -557,6 +559,27 @@ jobs:
           PY
           grep -q 'v529.js?v529' public/index.html
           grep -q 'v529.css?v529' public/index.html
+
+      - name: Publish V5.30 single-director character reactions
+        if: steps.bundle.outputs.present == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp preview/v530.css public/v530.css
+          cp preview/v530.js public/v530.js
+          node --check public/v530.js
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('public/index.html')
+          html=p.read_text(encoding='utf-8')
+          assert 'v529.css?v529' in html and 'v529.js?v529' in html
+          assert html.count('</head>')==1 and html.count('</body>')==1
+          html=html.replace('</head>','<link rel="stylesheet" href="v530.css?v530"/>\n</head>',1)
+          html=html.replace('</body>','<script src="v530.js?v530"></script>\n</body>',1)
+          p.write_text(html,encoding='utf-8')
+          PY
+          grep -q 'v530.css?v530' public/index.html
+          grep -q 'v530.js?v530' public/index.html
 
       - name: Configure GitHub Pages
         if: steps.bundle.outputs.present == 'true'
