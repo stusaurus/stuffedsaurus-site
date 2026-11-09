@@ -68,7 +68,7 @@
   };
   const ready = () => {
     if (!loaded.has(idle) || !card.classList.contains('v529-ready')) return;
-    card.classList.add('v530-ready');
+    if (!card.classList.contains('v530-ready')) card.classList.add('v530-ready');
     if (!active) setPose(idle);
   };
   // Decode before using a frame so tapping never briefly blanks the portrait.
