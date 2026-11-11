@@ -1,0 +1,96 @@
+/* V5.32 — Stegon's six approved, quadrupedal full-body illustrations.
+   Rigid frames only. No idle wobble, jumping, morphing or body-part animation. */
+#view-friends .v532-stegon .character-art{
+  position:relative;
+  overflow:visible;
+  isolation:isolate;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+#view-friends .v532-stegon .character-art img{
+  display:block;
+  width:100%;
+  height:auto;
+  aspect-ratio:5/4;
+  object-fit:contain;
+  object-position:50% 50%;
+  max-height:none;
+  transform:none!important;
+  transition:none!important;
+  animation:none!important;
+  opacity:1!important;
+}
+#view-friends .v532-stegon .v527-art-touch,
+#view-friends .v532-stegon .friend-discovery-button{
+  -webkit-tap-highlight-color:transparent!important;
+  touch-action:manipulation;
+}
+#view-friends .v532-stegon .v527-art-touch{
+  outline-offset:4px;
+}
+#view-friends .v532-stegon .v528-emotion{display:none!important}
+#view-friends .v532-stegon .v527-art-hint{bottom:4px}
+@media(max-width:540px){
+  #view-friends .friend-feature-list > .character-story.v532-stegon{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:9px;
+    padding:18px 12px 23px;
+    text-align:center;
+  }
+  #view-friends .v532-stegon .character-art{
+    width:min(83vw,318px);
+    max-width:100%;
+    margin:0 auto;
+    flex:none;
+  }
+  #view-friends .v532-stegon .v527-art-hint{
+    position:relative;
+    display:table;
+    left:auto;
+    bottom:auto;
+    transform:none;
+    margin:-6px auto 0;
+    padding:3px 12px;
+    font-size:12px;
+  }
+  #view-friends .v532-stegon .character-copy{
+    width:100%;
+    min-width:0;
+    text-align:center;
+  }
+  #view-friends .v532-stegon .character-copy .friend-discovery-response.v527-speech{
+    margin:15px auto 10px;
+    padding:12px 14px;
+    max-width:350px;
+    font-size:14px;
+    line-height:1.6;
+    border-radius:17px;
+  }
+  #view-friends .v532-stegon .character-copy .friend-discovery-response.v527-speech::before,
+  #view-friends .v532-stegon:nth-child(even) .character-copy .friend-discovery-response.v527-speech::before{
+    left:calc(50% - 9px);
+    right:auto;
+    top:-10px;
+    width:18px;height:18px;
+    border:0;
+    border-top:2px solid #c5a3ca;
+    border-left:2px solid #c5a3ca;
+    background:#fff9ff;
+    clip-path:none;
+    transform:rotate(45deg);
+    z-index:-1;
+  }
+  #view-friends .v532-stegon .character-copy .friend-discovery-v526{
+    margin:5px auto 13px;
+  }
+  #view-friends .v532-stegon .friend-discovery-button{
+    min-width:174px;
+    max-width:100%;
+    padding:10px 16px;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  #view-friends .v532-stegon .character-art img{animation:none!important;transition:none!important}
+}
