@@ -45,13 +45,21 @@
     margin:0 auto;
     flex:none;
   }
+  #view-friends .v532-stegon .character-art{
+    margin:0 auto 27px;
+  }
   #view-friends .v532-stegon .v527-art-hint{
-    position:relative;
-    display:table;
-    left:auto;
-    bottom:auto;
-    transform:none;
-    margin:-6px auto 0;
+    position:absolute;
+    display:block;
+    left:50%;
+    right:auto;
+    bottom:-25px;
+    transform:translateX(-50%);
+    width:max-content;
+    max-width:96%;
+    white-space:nowrap;
+    writing-mode:horizontal-tb;
+    line-height:1.5;
     padding:3px 12px;
     font-size:12px;
   }
