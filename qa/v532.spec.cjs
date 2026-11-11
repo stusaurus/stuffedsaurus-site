@@ -41,6 +41,12 @@ test('V5.32 6 Stegon-approved poses and dialogue on '+width+'px',async({browser}
    const bubble=await speech.boundingBox();
    expect(art.width).toBeGreaterThanOrEqual(250);
    expect(bubble.y).toBeGreaterThanOrEqual(art.y+art.height-2);
+   const hint=await card.locator('.v527-art-hint').boundingBox();
+   expect(hint.width).toBeGreaterThan(100);
+   expect(hint.height).toBeLessThanOrEqual(28);
+   expect(Math.abs((hint.x+hint.width/2)-(art.x+art.width/2))).toBeLessThan(5);
+   expect(hint.y).toBeGreaterThanOrEqual(art.y+art.height-6);
+   expect(hint.x).toBeGreaterThanOrEqual(art.x-2);
  }
  expect(await page.evaluate(()=>document.documentElement.scrollWidth-window.innerWidth)).toBeLessThanOrEqual(2);
  expect(errors).toEqual([]);
