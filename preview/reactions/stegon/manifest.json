@@ -1,0 +1,57 @@
+{
+  "character": "スタサウルスのステゴン",
+  "status": "user-approved individual images; rendered as aligned still frames",
+  "canvas": "400x320 transparent WebP",
+  "modelRules": [
+    "four legs always grounded",
+    "low long body, big head, small eyes",
+    "pale purple with lilac spots",
+    "peach-orange plates and cream tail spikes",
+    "no teeth",
+    "speaks 'ぼく' and ends with 'ゴン'"
+  ],
+  "frames": [
+    {
+      "id": "greeting",
+      "file": "greeting.webp",
+      "sha256": "5daab416230db8118a8d654ff3f20733dd58ff68c9a0b1cc1c8b8ea157060e5d",
+      "source_png_sha256": "2c4d4769636bf7ab6e3c5992a82eeb391e2bd090961aef557cee2573dbcdde6f",
+      "bytes": 38926
+    },
+    {
+      "id": "laugh",
+      "file": "laugh.webp",
+      "sha256": "4eb8fe3bc4b1051035ea55b7ea598e7665f6f53bcc33b5980186748fcbdfe680",
+      "source_png_sha256": "a4925556d4e7de5f6cc14f433630e2acf78a04123f0359c04fad2699039ea91e",
+      "bytes": 39748
+    },
+    {
+      "id": "shy",
+      "file": "shy.webp",
+      "sha256": "172dcc5a89b13280ac82aa62355b0bbbf4bdc7ac3885e5c76f0568a2699e18be",
+      "source_png_sha256": "b857addf606814559555afbcaf37e02690022bc0ae31ec524525079a8792c765",
+      "bytes": 38256
+    },
+    {
+      "id": "sorry",
+      "file": "sorry.webp",
+      "sha256": "db245038f1443f43b13a5d6947dd70e16d3bcdd6ebf3039ab98c48eb5b142eb8",
+      "source_png_sha256": "4214d012ecb856557fe83abafea7f4f3316475afbc1738da4e416e8a6f4bb100",
+      "bytes": 37858
+    },
+    {
+      "id": "surprised",
+      "file": "surprised.webp",
+      "sha256": "894534d82e0d4526eaae4c59b38a302d2fd76ab8ec3a9c348c8fce0304f13f52",
+      "source_png_sha256": "62b8c93f644d0090b94fffc09243a8d3c310e61d72923aaec0da0c2eadac611b",
+      "bytes": 40688
+    },
+    {
+      "id": "sprout",
+      "file": "sprout.webp",
+      "sha256": "d49a6e486a3fab84649bb40b2fa42e0fa565ad728e4ad6de3cbc8c802c645d85",
+      "source_png_sha256": "a9d3eb4989ad24394722ad41c3482ed12e41f7ecf70aad19860add9bd045eea6",
+      "bytes": 42476
+    }
+  ]
+}
