@@ -1,0 +1,69 @@
+name: V5.32 approved Stegon artwork and touch QA
+on:
+  pull_request:
+    paths:
+      - 'preview/v532.*'
+      - 'preview/reactions/stegon/**'
+      - 'qa/v532.spec.cjs'
+      - '.github/workflows/pages.yml'
+      - '.github/workflows/v532-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  approved-stegon-reactions:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser engines
+        run: |
+          npm install --no-save @playwright/test@1.58.2
+          npx playwright install --with-deps chromium webkit
+      - name: Verify both characters' approved artwork checksums
+        run: |
+          (cd preview/reactions/tiranon && sha256sum -c SHA256SUMS)
+          (cd preview/reactions/stegon && sha256sum -c SHA256SUMS)
+      - name: Assemble current site and V5.32 without changing official drawings
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          from shutil import copy2,copytree
+          out=Path('public');out.mkdir(exist_ok=True)
+          with ZipFile('site.zip') as z:z.extractall(out)
+          html=(out/'index.html').read_text(encoding='utf-8')
+          for version in ('512','513','514','515','516','517','518','519','520','525','526','527','528','529','530','531','532'):
+              for ext in ('css','js'):
+                  if version=='530' and ext=='js':continue
+                  src=Path('preview')/f'v{version}.{ext}'
+                  if not src.exists():continue
+                  copy2(src,out/src.name)
+                  anchor='</head>' if ext=='css' else '</body>'
+                  html=html.replace(anchor,
+                    (f'<link rel="stylesheet" href="{src.name}"/>' if ext=='css'
+                    else f'<script src="{src.name}"></script>')+'\n'+anchor,1)
+          copy2(Path('preview/instagram-recent.json'),out/'instagram-recent.json')
+          copytree(Path('preview/instagram-covers'),out/'instagram-covers')
+          copytree(Path('preview/reactions/tiranon'),out/'reactions/tiranon')
+          copytree(Path('preview/reactions/stegon'),out/'reactions/stegon')
+          (out/'index.html').write_text(html,encoding='utf-8')
+          assert 'v532.js' in html and 'v531.js' in html
+          assert 'src="v530.js' not in html
+          PY
+      - name: Validate JS syntax
+        run: node --check preview/v532.js
+      - name: Test Chrome and iOS WebKit
+        run: |
+          python3 -m http.server 8765 -d public >/tmp/v532-server.log 2>&1 &
+          npx playwright test qa/v532.spec.cjs --browser=chromium --reporter=line
+          npx playwright test qa/v532.spec.cjs --browser=webkit --reporter=line
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v532-stegon-six-approved-pose-screenshots
+          path: test-results/
+          if-no-files-found: ignore

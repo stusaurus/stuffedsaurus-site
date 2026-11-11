@@ -37,6 +37,9 @@ on:
       - 'preview/v531.css'
       - 'preview/v531.js'
       - 'preview/reactions/tiranon/**'
+      - 'preview/v532.css'
+      - 'preview/v532.js'
+      - 'preview/reactions/stegon/**'
       - 'preview/instagram-recent.json'
       - 'preview/instagram-covers/**'
       - '.github/workflows/pages.yml'
@@ -609,6 +612,34 @@ jobs:
             echo 'Duplicate capture handlers detected in release HTML'
             exit 1
           fi
+
+      - name: Publish V5.32 approved Stegon reactions
+        if: steps.bundle.outputs.present == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          (cd preview/reactions/stegon && sha256sum -c SHA256SUMS)
+          mkdir -p public/reactions/stegon
+          cp preview/reactions/stegon/*.webp public/reactions/stegon/
+          cp preview/v532.css public/v532.css
+          cp preview/v532.js public/v532.js
+          node --check public/v532.js
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('public/index.html')
+          html=p.read_text(encoding='utf-8')
+          assert 'v531.js?v531' in html, 'Tiranon V5.31 must remain'
+          assert 'v528.js?v528' in html, 'Existing Pteran must remain'
+          assert 'src="v530.js?v530"' not in html
+          assert html.count('</head>')==1 and html.count('</body>')==1
+          html=html.replace('</head>','<link rel="stylesheet" href="v532.css?v532"/>\n</head>',1)
+          html=html.replace('</body>','<script src="v532.js?v532"></script>\n</body>',1)
+          p.write_text(html,encoding='utf-8')
+          PY
+          grep -Fq 'v532.js?v532' public/index.html
+          grep -Fq 'v532.css?v532' public/index.html
+          test -s public/reactions/stegon/greeting.webp
+          test -s public/reactions/stegon/sprout.webp
 
       - name: Configure GitHub Pages
         if: steps.bundle.outputs.present == 'true'
