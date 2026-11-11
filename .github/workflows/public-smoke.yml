@@ -20,14 +20,14 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
-      - name: Verify V5.31 live storybook reactions, dialogue and official art
+      - name: Verify V5.32 live storybook reactions, dialogue and official art
         shell: bash
         run: |
           set -euo pipefail
           base='https://stusaurus.github.io/stuffedsaurus-site'
           ready=false
           for attempt in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20; do
-            if curl --fail --location --silent --show-error --retry 2 "$base/?v531-smoke=$attempt" -o /tmp/home.html \
+            if curl --fail --location --silent --show-error --retry 2 "$base/?v532-smoke=$attempt" -o /tmp/home.html \
               && grep -Fq 'v527.css?v527' /tmp/home.html \
               && grep -Fq 'v527.js?v527' /tmp/home.html \
               && grep -Fq 'v528.css?v528' /tmp/home.html \
@@ -37,6 +37,8 @@ jobs:
               && grep -Fq 'v530.css?v530' /tmp/home.html \
               && grep -Fq 'v531.css?v531' /tmp/home.html \
               && grep -Fq 'v531.js?v531' /tmp/home.html \
+              && grep -Fq 'v532.css?v532' /tmp/home.html \
+              && grep -Fq 'v532.js?v532' /tmp/home.html \
               && grep -Fq 'v526.js?v526' /tmp/home.html; then
               ready=true
               break
@@ -44,10 +46,10 @@ jobs:
             if [ "$attempt" -lt 20 ]; then sleep 15; fi
           done
           if [ "$ready" != true ]; then
-            echo 'Live homepage is missing the V5.31 storybook reaction layers'
+            echo 'Live homepage is missing the V5.32 storybook reaction layers'
             exit 1
           fi
-          for path in v512.css v512.js v513.css v513.js v514.css v514.js v526.css v526.js v527.css v527.js v528.css v528.js v529.css v529.js v530.css v530.js v531.css v531.js reactions/tiranon/wave_both.webp reactions/tiranon/shy_giggle.webp reactions/tiranon/happy_run.webp reactions/tiranon/sitting_laugh.webp reactions/tiranon/hooray.webp assets/hero-wide.webp assets/hero-mobile-v56.webp; do
+          for path in v512.css v512.js v513.css v513.js v514.css v514.js v526.css v526.js v527.css v527.js v528.css v528.js v529.css v529.js v530.css v530.js v531.css v531.js v532.css v532.js reactions/stegon/greeting.webp reactions/stegon/laugh.webp reactions/stegon/shy.webp reactions/stegon/sorry.webp reactions/stegon/surprised.webp reactions/stegon/sprout.webp reactions/tiranon/wave_both.webp reactions/tiranon/shy_giggle.webp reactions/tiranon/happy_run.webp reactions/tiranon/sitting_laugh.webp reactions/tiranon/hooray.webp assets/hero-wide.webp assets/hero-mobile-v56.webp; do
             echo "Checking $path"
             curl --fail --location --silent --show-error --retry 3 --output /dev/null "$base/$path"
           done
@@ -89,4 +91,19 @@ jobs:
           grep -Fq 'stopImmediatePropagation' /tmp/v531.js
           grep -Fq "reduce.matches" /tmp/v531.js
           grep -Fq -- '-webkit-tap-highlight-color:transparent' /tmp/v531.css
-          echo 'Published V5.31 reactions, V5.27 touch UI, reduced-motion support and essential art are available.'
+          # Verify the actual public Stegon code and exact approved asset bytes.
+          curl --fail --location --silent --show-error "$base/v532.js" -o /tmp/v532.js
+          curl --fail --location --silent --show-error "$base/v532.css" -o /tmp/v532.css
+          grep -Fq 'v532-stegon' /tmp/v532.js
+          grep -Fq 'stopImmediatePropagation' /tmp/v532.js
+          grep -Fq 'writing-mode:horizontal-tb' /tmp/v532.css
+          for name in greeting laugh shy sorry surprised sprout; do
+            curl --fail --location --silent --show-error --retry 3 "$base/reactions/stegon/$name.webp" -o "/tmp/stegon-$name.webp"
+          done
+          echo '5daab416230db8118a8d654ff3f20733dd58ff68c9a0b1cc1c8b8ea157060e5d  /tmp/stegon-greeting.webp' | sha256sum -c
+          echo '4eb8fe3bc4b1051035ea55b7ea598e7665f6f53bcc33b5980186748fcbdfe680  /tmp/stegon-laugh.webp' | sha256sum -c
+          echo '172dcc5a89b13280ac82aa62355b0bbbf4bdc7ac3885e5c76f0568a2699e18be  /tmp/stegon-shy.webp' | sha256sum -c
+          echo 'db245038f1443f43b13a5d6947dd70e16d3bcdd6ebf3039ab98c48eb5b142eb8  /tmp/stegon-sorry.webp' | sha256sum -c
+          echo '894534d82e0d4526eaae4c59b38a302d2fd76ab8ec3a9c348c8fce0304f13f52  /tmp/stegon-surprised.webp' | sha256sum -c
+          echo 'd49a6e486a3fab84649bb40b2fa42e0fa565ad728e4ad6de3cbc8c802c645d85  /tmp/stegon-sprout.webp' | sha256sum -c
+          echo 'Published V5.32 reactions, V5.27 touch UI, reduced-motion support and essential art are available.'
